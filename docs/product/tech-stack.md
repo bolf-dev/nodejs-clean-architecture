@@ -34,7 +34,11 @@ To be decided within spec `008`.
 
 ## Dependency log
 
-Runtime dependencies added after the initial setup, with the reason.
+Dependencies added after the initial setup, with the reason.
 
-| Package | Added in | Reason |
-|---------|----------|--------|
+| Package                                                                                  | Type    | Added in | Reason                                                  |
+|------------------------------------------------------------------------------------------|---------|----------|---------------------------------------------------------|
+| `@nestjs/config`                                                                         | runtime | 002      | configuration from environment variables                |
+| `@mikro-orm/core`, `@mikro-orm/postgresql`, `@mikro-orm/nestjs`, `@mikro-orm/migrations` | runtime | 002      | ORM and migrations                                      |
+| `@mikro-orm/cli`                                                                         | dev     | 002      | migration commands                                      |
+| `tsx`                                                                                    | dev     | 002      | TypeScript loader the MikroORM CLI uses for its config  |

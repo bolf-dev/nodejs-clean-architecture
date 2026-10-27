@@ -7,7 +7,7 @@ NestJS 12 / Node.js 24 / PostgreSQL 18 showcase of Clean Architecture, CQRS and 
 Requirements: Docker with Docker Compose, `make`. Node.js on the host is **not** needed, every command runs in a container.
 
 ```shell
-make init   # builds the image, installs dependencies, starts the app with PostgreSQL
+make init   # builds the image, installs dependencies, starts the app with PostgreSQL, applies migrations
 ```
 
 Try it:
@@ -27,6 +27,9 @@ The app runs in watch mode, changes in `src/` are picked up automatically.
 | `make logs`                   | Follow app logs                                     |
 | `make install`                | Install npm dependencies from `package-lock.json`   |
 | `make npm c="install <pkg>"`  | Run any npm command in the container                |
+| `make migration`              | Create a migration from the mapping changes         |
+| `make migrate`                | Apply pending migrations                            |
+| `make migrate-down`           | Revert the last migration                           |
 | `make test`                   | Run unit tests                                      |
 | `make test-e2e`               | Run e2e tests                                       |
 | `make lint`                   | Lint the code                                       |
@@ -38,6 +41,10 @@ The app runs in watch mode, changes in `src/` are picked up automatically.
 ## Configuration
 
 Ports and database credentials have defaults in `compose.yaml`. To override them, copy `.env.example` to `.env`.
+
+The app validates its environment variables at startup (`src/config/environment.ts`) and refuses to start when `DATABASE_URL` is missing or invalid.
+
+The database schema is changed only through migrations in `src/database/migrations/`.
 
 | Service    | Host port | Notes                                                      |
 |------------|-----------|------------------------------------------------------------|

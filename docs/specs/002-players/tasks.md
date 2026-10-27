@@ -13,21 +13,21 @@ Every command runs through `make`, never on the host.
 
 ## Phase 1: Database, ORM and the first migration
 
-- [ ] **1.1** Install `@nestjs/config`, `@mikro-orm/core`, `@mikro-orm/postgresql`, `@mikro-orm/nestjs`, `@mikro-orm/migrations` and, as dev dependencies, `@mikro-orm/cli` and `tsx`. Record them in the tech-stack dependency log.
-- [ ] **1.2** Add `src/config/environment.ts` with the `validate` function (`DATABASE_URL` required, `PORT` default `3000`, `NODE_ENV` default `development`) and register `ConfigModule` as global in `AppModule`.
+- [x] **1.1** Install `@nestjs/config`, `@mikro-orm/core`, `@mikro-orm/postgresql`, `@mikro-orm/nestjs`, `@mikro-orm/migrations` and, as dev dependencies, `@mikro-orm/cli` and `tsx`. Record them in the tech-stack dependency log.
+- [x] **1.2** Add `src/config/environment.ts` with the `validate` function (`DATABASE_URL` required, `PORT` default `3000`, `NODE_ENV` default `development`) and register `ConfigModule` as global in `AppModule`.
   - Verify: the app started without `DATABASE_URL` stops with a message naming the variable (T3)
-- [ ] **1.3** Add `src/database/mikro-orm.config.ts`: PostgreSQL driver, `DATABASE_URL`, explicit list of persistence models, `Migrator` extension, migrations folder `src/database/migrations`
-- [ ] **1.4** Register `MikroOrmModule.forRootAsync()` in `AppModule` with this config
-  - Verify: `make up`, the app log shows a successful database connection
-- [ ] **1.5** Add `PlayerRecord` in `src/modules/players/infrastructure/persistence/player.record.ts` with `defineEntity`: table `players`, columns `id` (`uuid`, primary key), `nickname` (`varchar(20)`), `created_at`, `updated_at` (`timestamptz`), unique expression index `players_nickname_lower_unique` on `lower(nickname)`
-- [ ] **1.6** Point the MikroORM CLI to the config and add `make migration`, `make migrate`, `make migrate-down`. Change `make init` to `install`, `up`, `migrate`.
-- [ ] **1.7** Generate the first migration with `make migration` and review its SQL: table, columns, types, index
+- [x] **1.3** Add `src/database/mikro-orm.config.ts`: PostgreSQL driver, `DATABASE_URL`, explicit list of persistence models, `Migrator` extension, migrations folder `src/database/migrations`
+- [x] **1.4** Register `MikroOrmModule.forRootAsync()` in `AppModule` with this config
+  - Verify: `make up`, the app starts. MikroORM connects lazily, so the connection itself is verified by `make migrate` in 1.8.
+- [x] **1.5** Add `PlayerRecord` in `src/modules/players/infrastructure/persistence/player.record.ts` with `defineEntity`: table `players`, columns `id` (`uuid`, primary key), `nickname` (`varchar(20)`), `created_at`, `updated_at` (`timestamptz`), unique expression index `players_nickname_lower_unique` on `lower(nickname)`
+- [x] **1.6** Point the MikroORM CLI to the config and add `make migration`, `make migrate`, `make migrate-down`. Change `make init` to `install`, `up`, `migrate`.
+- [x] **1.7** Generate the first migration with `make migration` and review its SQL: table, columns, types, index
   - If the expression index is not generated correctly, switch to the fallback from the plan (`nickname_normalized` column) before continuing
-- [ ] **1.8** Apply it with `make migrate`
+- [x] **1.8** Apply it with `make migrate`
   - Verify: `make psql` and `\d players` show the table and the index; `make migration` again reports no changes
-- [ ] **1.9** Update the README: new `make` targets
-- [ ] **1.10** Run the whole phase from scratch: `docker compose down -v` (removes the development database, which holds no data yet), `make init`, `make test`, `make lint`
-- [ ] **1.11** Commit phase 1
+- [x] **1.9** Update the README: new `make` targets
+- [x] **1.10** Run the whole phase from scratch: `docker compose down -v` (removes the development database, which holds no data yet), `make init`, `make test`, `make lint`
+- [x] **1.11** Commit phase 1
 
 ## Phase 2: Domain
 
