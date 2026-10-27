@@ -15,11 +15,12 @@ The architecture combines **Clean / Hexagonal / Onion architecture**, **Domain-D
 4. Implementation follows `tasks.md` one task at a time and ticks tasks off as they are done.
 5. When behavior has to change, the spec changes first, then the code.
 6. A feature is done when all tasks are ticked, tests and lint pass, and the roadmap item is checked off.
+7. A phase creates only what it uses itself. Nothing is prepared for later phases or features, it is added when it is first needed.
 
 ## 2. Modules
 
 - The application is a **modular monolith**. Every bounded context is a NestJS module in `src/modules/<context>/`, e.g. `players`, `seasons`, `predictions`.
-- Code shared by all modules (base classes for aggregates and domain events, the `Clock` port, the exception filter, database setup) lives in `src/shared/`, split into the same layers.
+- Code shared by all modules (e.g. error categories, the exception filter) lives in `src/shared/`, split into the same layers.
 - A module uses another module only through its public API: commands, queries and domain events. It never imports another module's domain, infrastructure or presentation code.
 
 ## 3. Layers
@@ -49,7 +50,8 @@ Every module is split into four layers. Dependencies point inwards only: present
 
 ## 5. CQRS
 
-- Commands, queries and events are dispatched through `@nestjs/cqrs` (`CommandBus`, `QueryBus`, `EventBus`). Each command and each query has exactly one handler.
+- Commands and queries follow the [NestJS CQRS recipe](https://docs.nestjs.com/recipes/cqrs). Controllers dispatch them through `CommandBus` and `QueryBus` directly, without a service in between. Each command and each query has exactly one handler, which is the use case.
+- `EventBus`, events and sagas are introduced only when another part of the system has to react to a change.
 - **Commands** change state: load an aggregate through its repository, call a domain method, save the aggregate. A command returns nothing or the identifier of the created resource.
 - **Queries** never load aggregates or call repositories. They read through read model ports that return flat, serializable read models and may use plain SQL.
 - One command changes one aggregate. Reactions in other aggregates or modules happen in event handlers.
@@ -62,7 +64,7 @@ Every module is split into four layers. Dependencies point inwards only: present
 - Aggregates, entities and value objects are always valid. Invalid state is rejected in factory methods and constructors.
 - State changes through intention-revealing methods (`register`, `submitPrediction`, `finish`), not through setters.
 - Value objects are immutable and compared by value.
-- Aggregates record domain events. Events are published after the aggregate has been saved.
+- When another part of the system has to react to a change, the aggregate records a domain event, which is published after the aggregate has been saved.
 - The domain never reads the current time or generates identifiers itself. Both are passed in by the application.
 - Persistence mapping (ORM schema) lives in infrastructure. Mappers convert between the domain model and the persistence model.
 
@@ -102,3 +104,4 @@ Every module is split into four layers. Dependencies point inwards only: present
 Changes to this document are explicit decisions of the project owner and are listed here with their date.
 
 - 2026-10-23: initial version
+- 2026-10-27: a phase creates only what it uses (1.7); CQRS follows the NestJS recipe with controllers calling the buses directly (5); events only when something reacts to them (5, 6)
