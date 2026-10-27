@@ -45,14 +45,14 @@ Created in the order a request travels. The endpoint works only after 2.5.
 
 ## Phase 3: Tests for creating a player
 
-- [ ] **3.1** Unit test `nickname.value-object.spec.ts`: R1, R2, R3 with the boundaries from AC2 to AC4 and the error messages
-- [ ] **3.2** Unit test `player.aggregate.spec.ts`: `create` sets `createdAt` and `updatedAt`
-- [ ] **3.3** Add `InMemoryPlayerRepository` and unit test `create-player.handler.spec.ts`: returns the id, saves the player, rejects a taken nickname in any letter case
-- [ ] **3.4** `make test-e2e`: create the test database when missing, migrate it, run e2e tests against it. Run e2e files one after another.
-- [ ] **3.5** Add `test/support/test-app.ts` and `test/support/database.ts`
-- [ ] **3.6** E2E tests in `test/players.e2e-spec.ts`: AC1 to AC7, AC6 with concurrent requests, AC18, AC19
-- [ ] **3.7** Update the README: how tests use the test database
-- [ ] **3.8** `make test`, `make test-e2e` twice in a row and `make lint` pass. Commit phase 3.
+- [x] **3.1** Unit test `nickname.value-object.spec.ts`: R1, R2, R3 with the boundaries from AC2 to AC4 and the error messages
+- [x] **3.2** Unit test `player.aggregate.spec.ts`: `create` sets `createdAt` and `updatedAt`
+- [x] **3.3** Add `InMemoryPlayerRepository` and unit test `create-player.handler.spec.ts`: returns the id, saves the player, rejects a taken nickname in any letter case
+- [x] **3.4** `make test-e2e`: create the test database when missing, migrate it, run e2e tests against it. Run e2e files one after another.
+- [x] **3.5** Add `test/support/test-app.ts` and `test/support/database.ts`
+- [x] **3.6** E2E tests in `test/players.e2e-spec.ts`: AC1 to AC7, AC6 with concurrent requests, AC18, AC19
+- [x] **3.7** Update the README: how tests use the test database
+- [x] **3.8** `make test`, `make test-e2e` twice in a row and `make lint` pass. Commit phase 3.
 
 ## Phase 4: Player detail
 

@@ -15,3 +15,6 @@ coverage/
 # OS / IDE
 .DS_Store
 .idea/
+
+# MikroORM schema snapshot of the e2e test database
+src/database/migrations/.snapshot-*_test.json

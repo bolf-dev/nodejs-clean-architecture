@@ -41,8 +41,10 @@ migrate-down: ## Revert the last migration
 test: ## Run unit tests
 	$(RUN) npm test
 
-test-e2e: ## Run e2e tests
-	$(RUN) npm run test:e2e
+test-e2e: ## Run e2e tests against the test database (<DB_NAME>_test, created and migrated when needed)
+	docker compose up -d --wait db
+	docker compose exec -T db sh -c 'createdb -U "$$POSTGRES_USER" "$${POSTGRES_DB}_test" 2>/dev/null || true'
+	$(RUN_WITH_DB) sh -c 'export DATABASE_URL="$${DATABASE_URL}_test" && npx mikro-orm migration:up && npm run test:e2e'
 
 lint: ## Lint the code
 	$(RUN) npm run lint

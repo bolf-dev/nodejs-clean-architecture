@@ -13,7 +13,9 @@ make init   # builds the image, installs dependencies, starts the app with Postg
 Try it:
 
 ```shell
-curl http://localhost:3000
+curl -i -X POST http://localhost:3000/v1/players \
+  -H 'content-type: application/json' \
+  -d '{"nickname": "JohnDoe"}'
 ```
 
 The app runs in watch mode, changes in `src/` are picked up automatically.
@@ -31,12 +33,17 @@ The app runs in watch mode, changes in `src/` are picked up automatically.
 | `make migrate`                | Apply pending migrations                            |
 | `make migrate-down`           | Revert the last migration                           |
 | `make test`                   | Run unit tests                                      |
-| `make test-e2e`               | Run e2e tests                                       |
+| `make test-e2e`               | Run e2e tests against the test database             |
 | `make lint`                   | Lint the code                                       |
 | `make format`                 | Format the code                                     |
 | `make shell`                  | Shell inside the app container                      |
 | `make psql`                   | `psql` console of the running database              |
 | `make prod-build`             | Build the production image                          |
+
+## Tests
+
+- **Unit tests** (`make test`): `*.spec.ts` files next to the code. They test the domain and the handlers without NestJS and without a database, using in-memory adapters of the ports.
+- **E2E tests** (`make test-e2e`): `*.e2e-spec.ts` files in `test/`. They start the whole app and send real HTTP requests. They run against a separate database `<DB_NAME>_test` in the same PostgreSQL container, which `make test-e2e` creates and migrates when needed. Every test starts with empty tables, the development database is never touched.
 
 ## Configuration
 
