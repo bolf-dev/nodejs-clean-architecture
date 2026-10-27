@@ -42,3 +42,5 @@ Dependencies added after the initial setup, with the reason.
 | `@mikro-orm/core`, `@mikro-orm/postgresql`, `@mikro-orm/nestjs`, `@mikro-orm/migrations` | runtime | 002      | ORM and migrations                                      |
 | `@mikro-orm/cli`                                                                         | dev     | 002      | migration commands                                      |
 | `tsx`                                                                                    | dev     | 002      | TypeScript loader the MikroORM CLI uses for its config  |
+| `class-validator`, `class-transformer`                                                   | runtime | 002      | request DTO validation with the NestJS `ValidationPipe` |
+| `@nestjs/cqrs`                                                                           | runtime | 002      | command and query buses                                 |

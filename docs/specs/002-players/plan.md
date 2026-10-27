@@ -93,7 +93,7 @@ export abstract class PlayerRepository {
 
 - `players/infrastructure/persistence/player.mapper.ts`: `Player` → `PlayerRecord`
 - `players/infrastructure/persistence/mikro-orm-player.repository.ts`: `existsWithNickname` compares with `lower(nickname)`, `save` inserts the record. A unique violation on the nickname index (two requests at the same time, AC6) becomes `NicknameAlreadyTaken`.
-- `PlayersModule` binds `PlayerRepository` to `MikroOrmPlayerRepository` and registers `PlayerRecord` with `MikroOrmModule.forFeature()`.
+- `PlayersModule` binds `PlayerRepository` to `MikroOrmPlayerRepository`. The repository uses the `EntityManager` directly, so `MikroOrmModule.forFeature()` is not needed.
 
 ### 2.6 Errors on the way back
 

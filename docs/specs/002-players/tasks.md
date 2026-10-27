@@ -33,15 +33,15 @@ Every command runs through `make`, never on the host.
 
 Created in the order a request travels. The endpoint works only after 2.5.
 
-- [ ] **2.1 Controller:** install `class-validator` and `class-transformer` (dependency log). Add `CreatePlayerRequest`, `PlayersController.create` (`POST /v1/players`, `201`, `{ id }`, `Location` header), `PlayersModule`, and the global validation pipe (`APP_PIPE`).
-- [ ] **2.2 Command:** install `@nestjs/cqrs` (dependency log). Add `CreatePlayerCommand`, register `CqrsModule.forRoot()` in `AppModule`, the controller executes the command through `CommandBus`.
-- [ ] **2.3 Command handler:** add `CreatePlayerHandler` (`@CommandHandler`) and register it in `PlayersModule`. Id from `randomUUID()`, time from `new Date()`.
-- [ ] **2.4 Domain:** add `Nickname` (R1, R2, R3, R5), `Player.create` (R7, R8), `InvalidNickname`, `NicknameAlreadyTaken`, and the categories `ValidationError` and `ConflictError` in `shared/domain/errors.ts`
-- [ ] **2.5 Repository:** add the `PlayerRepository` port (`existsWithNickname`, `save`), `PlayerMapper` (`Player` → `PlayerRecord`), `MikroOrmPlayerRepository` (unique violation → `NicknameAlreadyTaken`). Bind the port in `PlayersModule`.
-- [ ] **2.6 Errors:** add `ErrorResponseFilter` (`APP_FILTER`): categories → 400 / 409, `HttpException` → its status, anything else → 500 with logging, body `{ "error": … }`
-- [ ] **2.7 Cleanup:** remove the `Hello World` controller, service and their tests (T6)
-- [ ] **2.8** Manual check with `curl`: `Bolf` → `201` with id and `Location`; `ab` → `400`; `bolf` again → `409`; `{}` → `400` `nickname must be a string`; unknown route → `404` `{ "error": … }`; the row is in `players`
-- [ ] **2.9** `make lint` passes. Commit phase 2.
+- [x] **2.1 Controller:** install `class-validator` and `class-transformer` (dependency log). Add `CreatePlayerRequest`, `PlayersController.create` (`POST /v1/players`, `201`, `{ id }`, `Location` header), `PlayersModule`, and the global validation pipe (`APP_PIPE`).
+- [x] **2.2 Command:** install `@nestjs/cqrs` (dependency log). Add `CreatePlayerCommand`, register `CqrsModule.forRoot()` in `AppModule`, the controller executes the command through `CommandBus`.
+- [x] **2.3 Command handler:** add `CreatePlayerHandler` (`@CommandHandler`) and register it in `PlayersModule`. Id from `randomUUID()`, time from `new Date()`.
+- [x] **2.4 Domain:** add `Nickname` (R1, R2, R3, R5), `Player.create` (R7, R8), `InvalidNickname`, `NicknameAlreadyTaken`, and the categories `ValidationError` and `ConflictError` in `shared/domain/errors.ts`
+- [x] **2.5 Repository:** add the `PlayerRepository` port (`existsWithNickname`, `save`), `PlayerMapper` (`Player` → `PlayerRecord`), `MikroOrmPlayerRepository` (unique violation → `NicknameAlreadyTaken`). Bind the port in `PlayersModule`.
+- [x] **2.6 Errors:** add `ErrorResponseFilter` (`APP_FILTER`): categories → 400 / 409, `HttpException` → its status, anything else → 500 with logging, body `{ "error": … }`
+- [x] **2.7 Cleanup:** remove the `Hello World` controller, service and their tests (T6)
+- [x] **2.8** Manual check with `curl`: `Bolf` → `201` with id and `Location`; `ab` → `400`; `bolf` again → `409`; `{}` → `400` `nickname must be a string`; unknown route → `404` `{ "error": … }`; the row is in `players`
+- [x] **2.9** `make lint` passes. Commit phase 2.
 
 ## Phase 3: Tests for creating a player
 
