@@ -10,14 +10,15 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 interface PlayerRow {
   id: string;
   nickname: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 describe('Players (e2e)', () => {
   let app: INestApplication<App>;
 
   const createPlayer = (body: object) => request(app.getHttpServer()).post('/v1/players').send(body);
+  const getPlayer = (path: string) => request(app.getHttpServer()).get(path);
   const storedPlayers = () => query<PlayerRow>(app, 'select * from players order by created_at');
 
   beforeAll(async () => {
@@ -39,9 +40,9 @@ describe('Players (e2e)', () => {
       expect(response.body).toEqual({ id: expect.stringMatching(UUID) });
       expect(response.headers.location).toBe(`/v1/players/${response.body.id}`);
 
-      const [player] = await storedPlayers();
-      expect(player).toMatchObject({ id: response.body.id, nickname: 'JohnDoe' });
-      expect(player?.created_at).toEqual(player?.updated_at);
+      const player = await getPlayer(response.headers.location as string).expect(200);
+      expect(player.body).toMatchObject({ id: response.body.id, nickname: 'JohnDoe' });
+      expect(player.body.createdAt).toBe(player.body.updatedAt);
     });
 
     it('AC2 stores the nickname without leading and trailing whitespace', async () => {
@@ -95,6 +96,36 @@ describe('Players (e2e)', () => {
       const response = await createPlayer(body).expect(400);
 
       expect(response.body).toEqual({ error: 'nickname must be a string' });
+    });
+  });
+
+  describe('GET /v1/players/{playerId}', () => {
+    it('AC8 returns the player', async () => {
+      const created = await createPlayer({ nickname: 'JohnDoe' }).expect(201);
+      const [stored] = await storedPlayers();
+
+      const response = await getPlayer(`/v1/players/${created.body.id}`).expect(200);
+
+      expect(response.body).toEqual({
+        id: created.body.id,
+        nickname: 'JohnDoe',
+        createdAt: new Date(stored!.created_at).toISOString(),
+        updatedAt: new Date(stored!.updated_at).toISOString(),
+      });
+    });
+
+    it('AC9 returns 404 for an unknown id', async () => {
+      const id = '0199a1b2-7c3d-7e4f-8a5b-6c7d8e9f0a1b';
+
+      const response = await getPlayer(`/v1/players/${id}`).expect(404);
+
+      expect(response.body).toEqual({ error: `Player "${id}" not found` });
+    });
+
+    it('AC10 returns 400 when the id is not a UUID', async () => {
+      const response = await getPlayer('/v1/players/123').expect(400);
+
+      expect(response.body).toEqual({ error: 'playerId must be a UUID' });
     });
   });
 

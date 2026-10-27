@@ -8,3 +8,6 @@ export abstract class ValidationError extends Error {}
 
 /** The action conflicts with existing data, e.g. a taken nickname. */
 export abstract class ConflictError extends Error {}
+
+/** A referenced resource does not exist, e.g. an unknown player. */
+export abstract class NotFoundError extends Error {}

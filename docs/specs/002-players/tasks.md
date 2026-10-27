@@ -56,13 +56,13 @@ Created in the order a request travels. The endpoint works only after 2.5.
 
 ## Phase 4: Player detail
 
-- [ ] **4.1 Controller:** `PlayersController.get` with `ParseUUIDPipe` (`playerId must be a UUID`), `PlayerResponse`
-- [ ] **4.2 Query:** `GetPlayerQuery`, executed through `QueryBus`
-- [ ] **4.3 Query handler:** `GetPlayerHandler` (`@QueryHandler`), `PlayerNotFound`, `NotFoundError` category mapped to 404 in the filter
-- [ ] **4.4 Read model and port:** `PlayerReadModel`, `PlayerQueries` port
-- [ ] **4.5 SQL adapter:** `SqlPlayerQueries`, bound in `PlayersModule`
-- [ ] **4.6 Tests:** `InMemoryPlayerQueries`, `get-player.handler.spec.ts`, e2e AC8 to AC10, AC1 uses `GET`
-- [ ] **4.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 4.
+- [x] **4.1 Controller:** `PlayersController.get` with `ParseUUIDPipe` (`playerId must be a UUID`), `PlayerResponse`
+- [x] **4.2 Query:** `GetPlayerQuery`, executed through `QueryBus`
+- [x] **4.3 Query handler:** `GetPlayerHandler` (`@QueryHandler`), `PlayerNotFound`, `NotFoundError` category mapped to 404 in the filter
+- [x] **4.4 Read model and port:** `PlayerReadModel`, `PlayerQueries` port
+- [x] **4.5 SQL adapter:** `SqlPlayerQueries`, bound in `PlayersModule`
+- [x] **4.6 Tests:** `InMemoryPlayerQueries`, `get-player.handler.spec.ts`, e2e AC8 to AC10, AC1 uses `GET`
+- [x] **4.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 4.
 
 ## Phase 5: Changing the nickname
 
