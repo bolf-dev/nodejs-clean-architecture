@@ -66,13 +66,13 @@ Created in the order a request travels. The endpoint works only after 2.5.
 
 ## Phase 5: Changing the nickname
 
-- [ ] **5.1 Controller:** `PlayersController.changeNickname` (`PATCH`, `204`), `ChangeNicknameRequest`
-- [ ] **5.2 Command:** `ChangeNicknameCommand`
-- [ ] **5.3 Command handler:** `ChangeNicknameHandler`
-- [ ] **5.4 Domain:** `Player.changeNickname` (R6, R8, R9), `Player.reconstitute`, `Nickname.isSameAs`
-- [ ] **5.5 Repository:** `findById`, `existsWithNickname(nickname, exceptPlayerId?)`, mapper `PlayerRecord` → `Player`, `save` updates existing players. Update `InMemoryPlayerRepository` too.
-- [ ] **5.6 Tests:** unit tests of `changeNickname` and the handler, e2e AC11 to AC17
-- [ ] **5.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 5.
+- [x] **5.1 Controller:** `PlayersController.changeNickname` (`PATCH`, `204`), `ChangeNicknameRequest`
+- [x] **5.2 Command:** `ChangeNicknameCommand`
+- [x] **5.3 Command handler:** `ChangeNicknameHandler`
+- [x] **5.4 Domain:** `Player.changeNickname` (R6, R8, R9), `Player.reconstitute`, `Nickname.isSameAs`
+- [x] **5.5 Repository:** `findById`, `existsWithNickname(nickname, exceptPlayerId?)`, mapper `PlayerRecord` → `Player`, `save` updates existing players. Update `InMemoryPlayerRepository` too.
+- [x] **5.6 Tests:** unit tests of `changeNickname` and the handler, e2e AC11 to AC17
+- [x] **5.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 5.
 
 ## Phase 6: Layer checks in lint
 

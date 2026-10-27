@@ -23,4 +23,9 @@ export class Nickname {
 
     return new Nickname(value);
   }
+
+  /** Exactly the same nickname, including letter case. */
+  isSameAs(other: Nickname): boolean {
+    return this.value === other.value;
+  }
 }

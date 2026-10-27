@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ChangeNicknameHandler } from './application/commands/change-nickname/change-nickname.handler.js';
 import { CreatePlayerHandler } from './application/commands/create-player/create-player.handler.js';
 import { PlayerQueries } from './application/ports/player-queries.port.js';
 import { GetPlayerHandler } from './application/queries/get-player/get-player.handler.js';
@@ -11,6 +12,7 @@ import { PlayersController } from './presentation/http/players.controller.js';
   controllers: [PlayersController],
   providers: [
     CreatePlayerHandler,
+    ChangeNicknameHandler,
     GetPlayerHandler,
     // Whoever asks for a port gets its implementation
     { provide: PlayerRepository, useClass: MikroOrmPlayerRepository },

@@ -7,16 +7,27 @@ import { PlayerRepository } from '../../domain/player.repository.port.js';
 export class InMemoryPlayerRepository implements PlayerRepository {
   readonly players: Player[] = [];
 
-  async existsWithNickname(nickname: Nickname): Promise<boolean> {
+  async findById(id: string): Promise<Player | null> {
+    return this.players.find((player) => player.id === id) ?? null;
+  }
+
+  async existsWithNickname(nickname: Nickname, exceptPlayerId?: string): Promise<boolean> {
     const wanted = nickname.value.toLowerCase();
-    return this.players.some((player) => player.nickname.value.toLowerCase() === wanted);
+    return this.players.some(
+      (player) => player.id !== exceptPlayerId && player.nickname.value.toLowerCase() === wanted,
+    );
   }
 
   async save(player: Player): Promise<void> {
     // Same guarantee as the unique index in the database
-    if (await this.existsWithNickname(player.nickname)) {
+    if (await this.existsWithNickname(player.nickname, player.id)) {
       throw new NicknameAlreadyTaken(player.nickname);
     }
-    this.players.push(player);
+    const index = this.players.findIndex(({ id }) => id === player.id);
+    if (index === -1) {
+      this.players.push(player);
+    } else {
+      this.players[index] = player;
+    }
   }
 }

@@ -14,16 +14,28 @@ const NICKNAME_INDEX = 'players_nickname_lower_unique';
 export class MikroOrmPlayerRepository implements PlayerRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async existsWithNickname(nickname: Nickname): Promise<boolean> {
-    const rows = await this.em
-      .getConnection()
-      .execute('select 1 from players where lower(nickname) = lower(?) limit 1', [nickname.value]);
+  async findById(id: string): Promise<Player | null> {
+    const record = await this.em.findOne(PlayerRecord, { id });
+    return record === null ? null : PlayerMapper.toDomain(record);
+  }
+
+  async existsWithNickname(nickname: Nickname, exceptPlayerId?: string): Promise<boolean> {
+    const rows = exceptPlayerId
+      ? await this.em
+          .getConnection()
+          .execute('select 1 from players where lower(nickname) = lower(?) and id <> ? limit 1', [
+            nickname.value,
+            exceptPlayerId,
+          ])
+      : await this.em
+          .getConnection()
+          .execute('select 1 from players where lower(nickname) = lower(?) limit 1', [nickname.value]);
     return rows.length > 0;
   }
 
   async save(player: Player): Promise<void> {
     try {
-      await this.em.insert(PlayerRecord, PlayerMapper.toRecord(player));
+      await this.em.upsert(PlayerRecord, PlayerMapper.toRecord(player));
     } catch (error) {
       // Two requests with the same nickname at the same time: the unique index rejects the second one
       if (error instanceof UniqueConstraintViolationException && error.message.includes(NICKNAME_INDEX)) {

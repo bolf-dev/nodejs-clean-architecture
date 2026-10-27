@@ -19,6 +19,10 @@ describe('Players (e2e)', () => {
 
   const createPlayer = (body: object) => request(app.getHttpServer()).post('/v1/players').send(body);
   const getPlayer = (path: string) => request(app.getHttpServer()).get(path);
+  const changeNickname = (id: string, body: object) =>
+    request(app.getHttpServer()).patch(`/v1/players/${id}`).send(body);
+  const createPlayerId = async (nickname: string): Promise<string> =>
+    (await createPlayer({ nickname }).expect(201)).body.id;
   const storedPlayers = () => query<PlayerRow>(app, 'select * from players order by created_at');
 
   beforeAll(async () => {
@@ -126,6 +130,76 @@ describe('Players (e2e)', () => {
       const response = await getPlayer('/v1/players/123').expect(400);
 
       expect(response.body).toEqual({ error: 'playerId must be a UUID' });
+    });
+  });
+
+  describe('PATCH /v1/players/{playerId}', () => {
+    it('AC11 changes the nickname and updatedAt, createdAt stays', async () => {
+      const id = await createPlayerId('JohnDoe');
+      const before = (await getPlayer(`/v1/players/${id}`)).body;
+
+      const requestedAt = Date.now();
+      await changeNickname(id, { nickname: 'Ferrari_Fan' }).expect(204);
+      const respondedAt = Date.now();
+
+      const after = (await getPlayer(`/v1/players/${id}`).expect(200)).body;
+      expect(after.nickname).toBe('Ferrari_Fan');
+      expect(after.createdAt).toBe(before.createdAt);
+      expect(new Date(after.updatedAt).getTime()).toBeGreaterThanOrEqual(requestedAt);
+      expect(new Date(after.updatedAt).getTime()).toBeLessThanOrEqual(respondedAt);
+    });
+
+    it('AC12 allows changing only the letter case of the own nickname', async () => {
+      const id = await createPlayerId('JohnDoe');
+
+      await changeNickname(id, { nickname: 'JOHNDOE' }).expect(204);
+
+      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JOHNDOE');
+    });
+
+    it('AC13 rejects a nickname of another player', async () => {
+      const id = await createPlayerId('JohnDoe');
+      await createPlayerId('Ferrari_Fan');
+
+      const response = await changeNickname(id, { nickname: 'ferrari_fan' }).expect(409);
+
+      expect(response.body).toEqual({ error: 'Nickname "ferrari_fan" is already taken' });
+      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JohnDoe');
+    });
+
+    it.each(['ab', 'john!'])('AC14 rejects the invalid nickname "%s"', async (nickname) => {
+      const id = await createPlayerId('JohnDoe');
+
+      await changeNickname(id, { nickname }).expect(400);
+
+      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JohnDoe');
+    });
+
+    it('AC15 keeps updatedAt when the nickname is exactly the same', async () => {
+      const id = await createPlayerId('JohnDoe');
+      const before = (await getPlayer(`/v1/players/${id}`)).body;
+
+      await changeNickname(id, { nickname: 'JohnDoe' }).expect(204);
+
+      expect((await getPlayer(`/v1/players/${id}`)).body.updatedAt).toBe(before.updatedAt);
+    });
+
+    it('AC16 returns 404 for an unknown player and 400 for an id that is not a UUID', async () => {
+      const unknownId = '0199a1b2-7c3d-7e4f-8a5b-6c7d8e9f0a1b';
+
+      const notFound = await changeNickname(unknownId, { nickname: 'JohnDoe' }).expect(404);
+      const invalidId = await changeNickname('123', { nickname: 'JohnDoe' }).expect(400);
+
+      expect(notFound.body).toEqual({ error: `Player "${unknownId}" not found` });
+      expect(invalidId.body).toEqual({ error: 'playerId must be a UUID' });
+    });
+
+    it('AC17 rejects a body without a nickname', async () => {
+      const id = await createPlayerId('JohnDoe');
+
+      const response = await changeNickname(id, {}).expect(400);
+
+      expect(response.body).toEqual({ error: 'nickname must be a string' });
     });
   });
 

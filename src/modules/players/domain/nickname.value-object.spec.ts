@@ -30,4 +30,14 @@ describe('Nickname', () => {
     expect(() => Nickname.create(raw)).toThrow(InvalidNickname);
     expect(() => Nickname.create(raw)).toThrow(CHARACTERS_ERROR);
   });
+
+  describe('isSameAs', () => {
+    it('is true for exactly the same nickname', () => {
+      expect(Nickname.create('JohnDoe').isSameAs(Nickname.create('JohnDoe'))).toBe(true);
+    });
+
+    it('is false when only the letter case differs', () => {
+      expect(Nickname.create('JohnDoe').isSameAs(Nickname.create('JOHNDOE'))).toBe(false);
+    });
+  });
 });
