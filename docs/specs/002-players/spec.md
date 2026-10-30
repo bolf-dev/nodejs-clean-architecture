@@ -1,6 +1,6 @@
 # 002 Architecture skeleton and players
 
-- **Status:** Approved (2026-10-23)
+- **Status:** Done (2026-10-30)
 - **Roadmap:** [002](../../product/roadmap.md#002-architecture-skeleton-and-players)
 
 ## Why
@@ -140,7 +140,7 @@ This feature also lays the foundation for all later ones:
 - **T2** The database schema is created and changed only through committed migrations, with `make` targets to create and apply them.
 - **T3** The app refuses to start, with a clear message, when required configuration (e.g. the database URL) is missing.
 - **T4** Functional tests run against a separate test database, and every test starts from an empty database.
-- **T5** Lint fails when code breaks a dependency rule of the [constitution](../../constitution.md), e.g. the domain imports NestJS or presentation imports infrastructure.
+- **T5** Dropped on 2026-10-30: the dependency rules of the [constitution](../../constitution.md) are kept by review, without an automated check in lint.
 - **T6** The example `Hello World` code from the NestJS scaffold is removed.
 
 ## Out of scope
@@ -148,5 +148,6 @@ This feature also lays the foundation for all later ones:
 - Listing or searching players
 - Deleting a player
 - History of nickname changes
+- Automated checks of layer dependencies in lint
 - Authentication: anyone can create, read and change any player, until [007](../../product/roadmap.md#007-authentication)
 - Player statistics (roadmap item [006](../../product/roadmap.md#006-standings-and-stats))

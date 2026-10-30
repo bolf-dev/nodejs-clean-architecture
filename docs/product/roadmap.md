@@ -12,13 +12,12 @@ Done before spec-driven development was adopted, so it has no spec.
 
 Spec: [specs/002-players](../specs/002-players/spec.md)
 
-- [ ] Spec, plan, tasks
-- [ ] Implementation
+- [x] Spec, plan, tasks
+- [x] Implementation
 
 The first vertical slice through all layers, which sets the patterns for everything after it.
 
 - Module structure with layers, shared kernel, CQRS buses, ORM, migrations, test database, validation, error handling
-- Automated layer dependency checks in lint
 - `POST /v1/players`: create a player with a nickname, without credentials until [007](#007-authentication). Nickname 3 to 20 characters (letters, digits, `-`, `_`), unique case-insensitive.
 - `GET /v1/players/{playerId}`: player detail
 - `PATCH /v1/players/{playerId}`: change the nickname

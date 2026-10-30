@@ -1,6 +1,6 @@
 # 002 Architecture skeleton and players: plan
 
-- **Status:** Approved (revised 2026-10-27)
+- **Status:** Done (2026-10-30)
 - **Spec:** [spec.md](spec.md)
 
 This plan describes **how** the [spec](spec.md) is implemented. The work is split into small phases. Every phase creates only what it uses itself, ends with a working app and its own commit, and is reviewed before the next one starts.
@@ -12,7 +12,8 @@ This plan describes **how** the [spec](spec.md) is implemented. The work is spli
 | 3     | Tests for creating a player                               | AC1–AC7, AC18, AC19, T4         |
 | 4     | Player detail: `GET /v1/players/{playerId}`               | AC8–AC10                        |
 | 5     | Changing the nickname: `PATCH /v1/players/{playerId}`     | R6, R9, AC11–AC17               |
-| 6     | Layer checks in lint                                      | T5                              |
+
+Phase 6 (layer checks in lint with dependency-cruiser) was dropped on 2026-10-30.
 
 ## CQRS with `@nestjs/cqrs`
 
@@ -169,34 +170,12 @@ Tests: unit tests of `changeNickname` and the handler, e2e AC11 to AC17. AC11 an
 
 ---
 
-## Phase 6: Layer checks in lint
-
-**Goal:** breaking a dependency rule of the constitution fails `make lint` (T5).
-
-- Dev package `dependency-cruiser`, configuration in `.dependency-cruiser.cjs`, run by `npm run lint` after oxlint
-
-| Rule                              | Forbids                                                                                       |
-|-----------------------------------|-----------------------------------------------------------------------------------------------|
-| `domain-is-pure`                  | `*/domain/**` importing anything outside the `domain` of its own module and `shared/domain`, including any npm package |
-| `application-only-di-and-cqrs`    | `*/application/**` importing `infrastructure`, `presentation`, or npm packages other than `@nestjs/common` and `@nestjs/cqrs` |
-| `presentation-not-infrastructure` | `*/presentation/**` importing `*/infrastructure/**`                                           |
-| `modules-are-isolated`            | `modules/<a>/**` importing `modules/<b>/**`                                                   |
-| `shared-not-modules`              | `shared/**` importing `modules/**`                                                            |
-| `no-circular`                     | circular imports                                                                              |
-
-Module files (`*.module.ts`), `app.module.ts`, `main.ts`, `config/` and `database/` are the composition root and may import every layer.
-
-Done when `make lint` passes, and a temporary import of `@nestjs/common` in `nickname.value-object.ts` makes it fail with `domain-is-pure`.
-
----
-
 ## Dependencies
 
 | Package                                | Type    | Phase | Reason                          |
 |----------------------------------------|---------|-------|---------------------------------|
 | `class-validator`, `class-transformer` | runtime | 2     | request DTO validation          |
 | `@nestjs/cqrs`                         | runtime | 2     | command and query buses         |
-| `dependency-cruiser`                   | dev     | 6     | layer checks                    |
 
 Phase 1 dependencies are already recorded in the [tech-stack dependency log](../../product/tech-stack.md#dependency-log).
 
@@ -206,7 +185,7 @@ Phase 1 dependencies are already recorded in the [tech-stack dependency log](../
 |-------------------------|----------------------------------------------------------------------------------------------|
 | 1 Workflow              | every phase creates only what it uses                                                        |
 | 2 Modules               | `players` module in `src/modules/players`, shared code in `src/shared`                       |
-| 3 Layers                | domain without imports, application only with `@nestjs/common`, `@nestjs/cqrs` and Node.js built-ins, checked in phase 6 |
+| 3 Layers                | domain without imports, application only with `@nestjs/common`, `@nestjs/cqrs` and Node.js built-ins, kept by review |
 | 4 Ports and adapters    | `PlayerRepository` in the domain, `PlayerQueries` in the application, abstract classes with in-memory adapters for tests |
 | 5 CQRS                  | `@nestjs/cqrs` commands and queries, one handler each, the query never loads the aggregate   |
 | 6 Domain model          | `Player` always valid, no setters, id and time passed in by the handler, separate persistence model and mapper |

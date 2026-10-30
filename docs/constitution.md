@@ -38,7 +38,7 @@ Every module is split into four layers. Dependencies point inwards only: present
 - `application` uses NestJS only for dependency injection and CQRS. It imports no ORM, no HTTP client and nothing from Express.
 - `presentation` talks to the application only through the command bus and the query bus. It never imports infrastructure.
 - The module class (`<context>.module.ts`) is the composition root. It is the only place that binds ports to adapters.
-- These rules are enforced by an automated check in lint, not only by review.
+- These rules are kept by review. There is no automated check in lint.
 
 ## 4. Ports and adapters
 
@@ -105,3 +105,4 @@ Changes to this document are explicit decisions of the project owner and are lis
 
 - 2026-10-23: initial version
 - 2026-10-27: a phase creates only what it uses (1.7); CQRS follows the NestJS recipe with controllers calling the buses directly (5); events only when something reacts to them (5, 6)
+- 2026-10-30: layer rules are kept by review instead of an automated lint check (3)

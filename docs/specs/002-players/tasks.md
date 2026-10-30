@@ -1,6 +1,6 @@
 # 002 Architecture skeleton and players: tasks
 
-- **Status:** Approved (phases 2 to 6 revised 2026-10-27), in progress
+- **Status:** Done (2026-10-30)
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order, one at a time. Every phase creates only what it uses, ends with green checks and a commit on the `002-players` branch, then stops for review before the next phase starts.
@@ -76,13 +76,10 @@ Created in the order a request travels. The endpoint works only after 2.5.
 
 ## Phase 6: Layer checks in lint
 
-- [ ] **6.1** Install `dependency-cruiser` as a dev dependency (dependency log)
-- [ ] **6.2** Add `.dependency-cruiser.cjs` with the rules from the plan, `npm run lint` runs it after oxlint
-- [ ] **6.3** `make lint` passes on the current code. Negative check: a temporary import of `@nestjs/common` in `nickname.value-object.ts` fails with `domain-is-pure`, then it is removed.
-- [ ] **6.4** Commit phase 6
+Dropped on 2026-10-30.
 
 ## Finish
 
-- [ ] **F.1** Update the README: short architecture overview with links to the constitution and the roadmap
-- [ ] **F.2** Check off 002 in the roadmap, set spec, plan and tasks to done
+- [x] **F.1** Update the README: short architecture overview with links to the constitution and the roadmap
+- [x] **F.2** Check off 002 in the roadmap, set spec, plan and tasks to done
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request

@@ -2,6 +2,8 @@
 
 NestJS 12 / Node.js 24 / PostgreSQL 18 showcase of Clean Architecture, CQRS and ports & adapters, running fully in Docker.
 
+The application is the backend of an **F1 Prediction League**: players predict the pole position and the podium of every Grand Prix and are scored after the race. See the [mission](docs/product/mission.md) for the game rules and the [roadmap](docs/product/roadmap.md) for what is done and what comes next.
+
 ## Getting started
 
 Requirements: Docker with Docker Compose, `make`. Node.js on the host is **not** needed, every command runs in a container.
@@ -19,6 +21,40 @@ curl -i -X POST http://localhost:3000/v1/players \
 ```
 
 The app runs in watch mode, changes in `src/` are picked up automatically.
+
+## API
+
+| Method  | Path                       | Description                          | Success                          |
+|---------|----------------------------|--------------------------------------|----------------------------------|
+| `POST`  | `/v1/players`              | Create a player `{ "nickname": … }`  | `201` `{ "id" }`, `Location` header |
+| `GET`   | `/v1/players/{playerId}`   | Player detail                        | `200` `{ "id", "nickname", "createdAt", "updatedAt" }` |
+| `PATCH` | `/v1/players/{playerId}`   | Change the nickname `{ "nickname": … }` | `204`                         |
+
+Errors have the body `{ "error": "<message>" }`: `400` invalid input, `404` unknown player, `409` nickname taken, `500` unexpected error. The full contract is in the [spec of 002](docs/specs/002-players/spec.md#api-contract).
+
+## Architecture
+
+The code follows the rules in the [constitution](docs/constitution.md). Each bounded context is a NestJS module in `src/modules/<context>/` with four layers, code shared by all modules lives in `src/shared/`.
+
+| Layer            | Contains                                                              | Depends on                                  |
+|------------------|-----------------------------------------------------------------------|---------------------------------------------|
+| `domain`         | Aggregates, value objects, domain errors, repository ports            | nothing                                     |
+| `application`    | Commands, queries and their handlers (use cases), read models, ports  | `domain`, NestJS DI and `@nestjs/cqrs`      |
+| `infrastructure` | Adapters of the ports: MikroORM repository, SQL queries, in-memory    | `application`, `domain`, any library        |
+| `presentation`   | HTTP controllers, request and response DTOs                           | `application`, NestJS                       |
+
+Writes and reads take different paths (CQRS, as in the [NestJS CQRS recipe](https://docs.nestjs.com/recipes/cqrs)):
+
+```
+Write  POST, PATCH /v1/players                Read  GET /v1/players/{playerId}
+  → PlayersController                           → PlayersController
+  → CommandBus → command handler                → QueryBus → query handler
+  → Nickname, Player (domain rules)             → PlayerQueries port
+  → PlayerRepository port                       → SQL straight into a read model
+  → MikroORM adapter → players table            → players table
+```
+
+The project is built with spec-driven development: every feature has a spec, a plan and tasks in [`docs/specs/`](docs/specs/), approved before any code is written.
 
 ## Commands
 
