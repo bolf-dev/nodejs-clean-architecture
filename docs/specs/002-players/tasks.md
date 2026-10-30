@@ -82,4 +82,4 @@ Dropped on 2026-10-30.
 
 - [x] **F.1** Update the README: short architecture overview with links to the constitution and the roadmap
 - [x] **F.2** Check off 002 in the roadmap, set spec, plan and tasks to done
-- [ ] **F.3** After approval of the project owner: push the branch and open a pull request
+- [x] **F.3** After approval of the project owner: push the branch and open a pull request
