@@ -24,7 +24,7 @@
 
 ## Open decisions
 
-To be decided within spec `008`.
+To be decided within spec `009`.
 
 | Area              | Candidate        |
 |-------------------|------------------|

@@ -20,7 +20,7 @@ The game is easy to understand, but it has real business rules (deadlines, valid
 
 ## Non-goals
 
-- Authentication until roadmap item [007](roadmap.md#007-authentication). Until then a player is identified by an id in the URL.
+- Authentication until roadmap item [008](roadmap.md#008-authentication). Until then a player is identified by an id in the URL.
 - Roles and permissions. Every player has the same rights.
 - Private leagues and invitations
 - Sprint race predictions, constructors, fastest lap

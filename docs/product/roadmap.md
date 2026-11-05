@@ -18,12 +18,24 @@ Spec: [specs/002-players](../specs/002-players/spec.md)
 The first vertical slice through all layers, which sets the patterns for everything after it.
 
 - Module structure with layers, shared kernel, CQRS buses, ORM, migrations, test database, validation, error handling
-- `POST /v1/players`: create a player with a nickname, without credentials until [007](#007-authentication). Nickname 3 to 20 characters (letters, digits, `-`, `_`), unique case-insensitive.
+- `POST /v1/players`: create a player with a nickname, without credentials until [008](#008-authentication). Nickname 3 to 20 characters (letters, digits, `-`, `_`), unique case-insensitive.
 - `GET /v1/players/{playerId}`: player detail
 - `PATCH /v1/players/{playerId}`: change the nickname
 - Data: `players` (`id`, `nickname`, `created_at`, `updated_at`)
 
-## 003 Season sync
+## 003 Frontend for players
+
+Spec: [specs/003-frontend](../specs/003-frontend/spec.md)
+
+- [x] Spec, plan, tasks
+- [ ] Implementation
+
+A web frontend for the players endpoints of 002, in the style of Formula 1 TV graphics.
+
+- Vue 3 in `frontend/`, running in Docker next to the backend
+- Screens to create a player, see a player and change the nickname
+
+## 004 Season sync
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -38,7 +50,7 @@ Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProv
 - Whether a race is open for predictions is derived from its deadline and the `Clock` port, not stored
 - Jolpica: `/{season}.json` (calendar with `Qualifying` and `SprintQualifying` times), `/{season}/drivers.json` (drivers without a team)
 
-## 004 Predictions
+## 005 Predictions
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -50,7 +62,7 @@ Submitting predictions with the deadline and validation rules.
 - `GET /v1/races/{raceId}/predictions`: all predictions of a race, only after the deadline
 - Data: `predictions` (player, race, pole, P1, P2, P3, submitted and updated time)
 
-## 005 Results and scoring
+## 006 Results and scoring
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -63,7 +75,7 @@ Importing official results and scoring all predictions of a race.
 - Data: `race_results` (pole, P1, P2, P3, imported time), `prediction_scores` (points, breakdown, calculated time)
 - Jolpica: `/{season}/{round}/qualifying.json` (pole), `/{season}/{round}/results.json` (podium, constructors)
 
-## 006 Standings and stats
+## 007 Standings and stats
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -73,7 +85,7 @@ Read models for the season ranking and player statistics.
 - `GET /v1/standings?season=2026`: season standings with tie-breaking
 - `GET /v1/players/{playerId}` extended with season stats: points, exact positions, perfect podiums, best race
 
-## 007 Authentication
+## 008 Authentication
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -87,7 +99,7 @@ Players register with an email and a password and log in. Endpoints acting on be
 - Ports `PasswordHasher` (argon2 adapter) and `TokenService` (JWT adapter). Checking the token is a NestJS guard in presentation.
 - Data: credentials (player, unique email, password hash)
 
-## 008 Quality
+## 009 Quality
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
