@@ -106,8 +106,6 @@ Decided in phase 1 (2026-11-06): `notes-app` keeps `node_modules` in a named vol
 - `src/components/AppHeader.vue`: dark bar with a red slanted stripe and the app name in bold italic uppercase, linking to `/`
 - `App.vue`: `AppHeader` and a centered content area for `<RouterView />`, responsive from 360 px
 
-All colors used for text are checked against the background for WCAG AA contrast.
-
 **Done when:** the header and the empty content area look as described on a 360 px and on a desktop wide window.
 
 ---

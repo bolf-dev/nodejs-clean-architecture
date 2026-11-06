@@ -1,0 +1,41 @@
+/* Design tokens: the visual language of the app, inspired by F1 TV graphics */
+:root {
+  /* Colors (dark theme only) */
+  --color-bg: #15151e;
+  --color-panel: #1f1f27;
+  --color-panel-border: #38383f;
+  --color-text: #ffffff;
+  --color-text-muted: #b8b8c0;
+  --color-accent: #e10600;
+  --color-error: #ff6b6b;
+
+  /* Typography */
+  --font-family: 'Titillium Web', system-ui, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  --font-size-small: 0.875rem;
+  --font-size-text: 1rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h1: clamp(1.75rem, 1.25rem + 2.5vw, 2.5rem);
+  --line-height-text: 1.5;
+  --line-height-heading: 1.1;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Shapes: angled corners instead of round ones */
+  --radius: 0;
+  --corner-cut: 12px;
+  --slant: -20deg;
+
+  /* Layout */
+  --content-max-width: 960px;
+}

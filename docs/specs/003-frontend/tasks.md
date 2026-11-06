@@ -26,14 +26,13 @@ Every command runs through `make` or in a container, never on the host.
 
 ## Phase 2: Layout and F1 design
 
-- [ ] **2.1** `index.html`: Titillium Web from Google Fonts (400, 600, 700, 900, italic), title "F1 Prediction League", `lang="en"`
-- [ ] **2.2** `src/assets/styles/tokens.css`: colors, typography, spacing and radius tokens from the plan
-- [ ] **2.3** `src/assets/styles/base.css`: reset, dark background, text color, red focus outline, checkered motif utility; imported in `main.ts`
-- [ ] **2.4** `src/components/AppHeader.vue`: dark bar, red slanted stripe, app name in bold italic uppercase linking to `/`
-- [ ] **2.5** `App.vue`: `AppHeader` and a centered content area for `<RouterView />`
-- [ ] **2.6** Check WCAG AA contrast of every text color against its background
-- [ ] **2.7** Verify: the header and the empty content area look as described at 360 px and on a desktop window, without horizontal scrolling
-- [ ] **2.8** `make frontend-lint` passes. Commit phase 2.
+- [x] **2.1** `index.html`: Titillium Web from Google Fonts (400, 600, 700, 900, italic), title "F1 Prediction League", `lang="en"`
+- [x] **2.2** `src/assets/styles/tokens.css`: colors, typography, spacing and radius tokens from the plan
+- [x] **2.3** `src/assets/styles/base.css`: reset, dark background, text color, red focus outline, checkered motif utility; imported in `main.ts`
+- [x] **2.4** `src/components/AppHeader.vue`: dark bar, red slanted stripe, app name in bold italic uppercase linking to `/`
+- [x] **2.5** `App.vue`: `AppHeader` and a centered content area for `<RouterView />`
+- [x] **2.6** Verify: the header and the empty content area look as described at 360 px and on a desktop window, without horizontal scrolling
+- [x] **2.7** `make frontend-lint` passes. Commit phase 2.
 
 ## Phase 3: Player profile and player not found
 
