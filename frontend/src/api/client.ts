@@ -1,4 +1,4 @@
-const GENERIC_ERROR = 'Something went wrong. Please try again.'
+export const GENERIC_ERROR = 'Something went wrong. Please try again.'
 
 /** An error response from the API, or status 0 when the API cannot be reached. */
 export class ApiError extends Error {

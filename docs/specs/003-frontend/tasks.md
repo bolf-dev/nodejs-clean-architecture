@@ -48,12 +48,12 @@ Created in the order data travels.
 
 ## Phase 4: Create player
 
-- [ ] **4.1 Players API:** `createPlayer(nickname)` returning `{ id }`
-- [ ] **4.2 Form:** `src/components/NicknameForm.vue`: label "Nickname", one input, submit label from the parent, disabled when the trimmed value is empty or while submitting, working state while submitting, error message below the input with `aria-describedby` and `role="alert"`, emits `submit`, keeps the value after an error
-- [ ] **4.3 View:** `src/views/CreatePlayerView.vue`: headline about the game, the form; success → `/players/{id}`; `ApiError` → its message in the form
-- [ ] **4.4 Router:** route `/` and a redirect of unknown paths to `/`
-- [ ] **4.5** Verify AC3 to AC7 in the browser
-- [ ] **4.6** `make frontend-lint` passes. Commit phase 4.
+- [x] **4.1 Players API:** `createPlayer(nickname)` returning `{ id }`
+- [x] **4.2 Form:** `src/components/NicknameForm.vue`: label "Nickname", one input, submit label from the parent, disabled when the trimmed value is empty or while submitting, working state while submitting, error message below the input with `aria-describedby` and `role="alert"`, emits `submit`, keeps the value after an error
+- [x] **4.3 View:** `src/views/CreatePlayerView.vue`: headline about the game, the form; success → `/players/{id}`; `ApiError` → its message in the form
+- [x] **4.4 Router:** route `/` and a redirect of unknown paths to `/`
+- [x] **4.5** Verify AC3 to AC7 in the browser
+- [x] **4.6** `make frontend-lint` passes. Commit phase 4.
 
 ## Phase 5: Change nickname
 

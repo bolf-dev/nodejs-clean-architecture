@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ApiError } from '@/api/client'
+import { ApiError, GENERIC_ERROR } from '@/api/client'
 import { getPlayer, type Player } from '@/api/players'
 import { formatDate } from '@/utils/format-date'
 import PlayerNotFoundView from './PlayerNotFoundView.vue'
@@ -19,8 +19,7 @@ async function load(): Promise<void> {
     if (error instanceof ApiError && (error.status === 404 || error.status === 400)) {
       notFound.value = true
     } else {
-      errorMessage.value =
-        error instanceof ApiError ? error.message : 'Something went wrong. Please try again.'
+      errorMessage.value = error instanceof ApiError ? error.message : GENERIC_ERROR
     }
   } finally {
     loading.value = false

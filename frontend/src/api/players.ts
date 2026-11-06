@@ -8,6 +8,10 @@ export interface Player {
   updatedAt: string
 }
 
+export function createPlayer(nickname: string): Promise<{ id: string }> {
+  return request<{ id: string }>('POST', '/v1/players', { nickname })
+}
+
 export function getPlayer(id: string): Promise<Player> {
   return request<Player>('GET', `/v1/players/${encodeURIComponent(id)}`)
 }
