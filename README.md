@@ -2,7 +2,7 @@
 
 NestJS 12 / Node.js 24 / PostgreSQL 18 showcase of Clean Architecture, CQRS and ports & adapters, running fully in Docker.
 
-The application is the backend of an **F1 Prediction League**: players predict the pole position and the podium of every Grand Prix and are scored after the race. See the [mission](docs/product/mission.md) for the game rules and the [roadmap](docs/product/roadmap.md) for what is done and what comes next.
+The application is an **F1 Prediction League**: players predict the pole position and the podium of every Grand Prix and are scored after the race. See the [mission](docs/product/mission.md) for the game rules and the [roadmap](docs/product/roadmap.md) for what is done and what comes next.
 
 ## Getting started
 
@@ -12,7 +12,7 @@ Requirements: Docker with Docker Compose, `make`. Node.js on the host is **not**
 make init   # builds the image, installs dependencies, starts the app with PostgreSQL, applies migrations
 ```
 
-Try it:
+Open the frontend at http://localhost:5173 to create a player, or call the API directly:
 
 ```shell
 curl -i -X POST http://localhost:3000/v1/players \
@@ -20,7 +20,7 @@ curl -i -X POST http://localhost:3000/v1/players \
   -d '{"nickname": "JohnDoe"}'
 ```
 
-The app runs in watch mode, changes in `src/` are picked up automatically.
+The backend runs in watch mode and the frontend in the Vite dev server, so changes in `src/` and `frontend/src/` are picked up automatically.
 
 ## API
 
@@ -56,11 +56,20 @@ Write  POST, PATCH /v1/players                Read  GET /v1/players/{playerId}
 
 The project is built with spec-driven development: every feature has a spec, a plan and tasks in [`docs/specs/`](docs/specs/), approved before any code is written.
 
+## Frontend
+
+A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics, with three screens: create player (`/`), player profile with changing the nickname (`/players/{playerId}`) and player not found.
+
+- **Dev server:** Vite in the `frontend` compose service on http://localhost:5173 with hot reload
+- **API:** calls go to `/v1/…` on the same origin; Vite forwards them to the backend, so no CORS setup is needed
+- **No extra libraries:** `fetch` for HTTP, plain CSS with design tokens in `frontend/src/assets/styles/`
+- **Rules stay in the backend:** the frontend shows the API's error messages and only blocks an empty nickname
+
 ## Commands
 
 | Command                       | Description                                         |
 |-------------------------------|-----------------------------------------------------|
-| `make up`                     | Start the app on http://localhost:3000 with the DB  |
+| `make up`                     | Start the API, the frontend and the DB              |
 | `make down`                   | Stop the app                                        |
 | `make logs`                   | Follow app logs                                     |
 | `make install`                | Install npm dependencies from `package-lock.json`   |
@@ -75,6 +84,9 @@ The project is built with spec-driven development: every feature has a spec, a p
 | `make shell`                  | Shell inside the app container                      |
 | `make psql`                   | `psql` console of the running database              |
 | `make prod-build`             | Build the production image                          |
+| `make frontend-logs`          | Follow frontend logs                                |
+| `make frontend-npm c="…"`     | Run any npm command in the frontend container       |
+| `make frontend-lint`          | Lint and type check the frontend                    |
 
 ## Tests
 
@@ -92,6 +104,7 @@ The database schema is changed only through migrations in `src/database/migratio
 | Service    | Host port | Notes                                                      |
 |------------|-----------|------------------------------------------------------------|
 | app        | 3000      | debugger on 9229 (`npm run start:debug`)                   |
+| frontend   | 5173      | Vite dev server, `FRONTEND_PORT`                           |
 | PostgreSQL | 5432      | user / password / database: `app` / `app` / `app`          |
 
 ## Docker images
@@ -100,3 +113,5 @@ The database schema is changed only through migrations in `src/database/migratio
 
 - `development`: used by `compose.yaml`, source code and `node_modules` are bind-mounted from the project directory
 - `production`: compiled `dist/` with runtime dependencies only, running as the non-root `node` user
+
+The frontend has no Dockerfile: the `frontend` service runs the official `node:24-alpine` image with `frontend/` bind-mounted.

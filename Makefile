@@ -3,15 +3,16 @@ export HOST_GID := $(shell id -g)
 
 RUN := docker compose run --rm --no-deps app
 RUN_WITH_DB := docker compose run --rm app
+RUN_FRONTEND := docker compose run --rm --no-deps frontend
 
-.PHONY: help init up down restart logs install npm migration migrate migrate-down test test-e2e lint format shell psql prod-build
+.PHONY: help init up down restart logs install npm migration migrate migrate-down test test-e2e lint format shell psql prod-build frontend-logs frontend-npm frontend-lint
 
 help: ## Show available commands
-	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
 init: install up migrate ## First-time setup: build image, install dependencies, start the app, migrate the database
 
-up: ## Start the app on http://localhost:3000 (with PostgreSQL)
+up: ## Start the API on http://localhost:3000 and the frontend on http://localhost:5173 (with PostgreSQL)
 	docker compose up -d --build
 
 down: ## Stop the app
@@ -60,3 +61,12 @@ psql: ## Open psql in the running database container
 
 prod-build: ## Build the production image
 	docker build --target production -f .docker/Dockerfile -t nodejs-clean-architecture .
+
+frontend-logs: ## Follow frontend logs
+	docker compose logs -f frontend
+
+frontend-npm: ## Run any npm command in the frontend, e.g. make frontend-npm c="ls"
+	$(RUN_FRONTEND) npm $(c)
+
+frontend-lint: ## Lint and type check the frontend
+	$(RUN_FRONTEND) sh -c "npm run lint && npm run type-check"
