@@ -38,13 +38,13 @@ Every command runs through `make` or in a container, never on the host.
 
 Created in the order data travels.
 
-- [ ] **3.1 API client:** `src/api/client.ts` with `request<T>(method, path, body?)` and `ApiError` (`status`, message). Error body → its `error` message; `500` and an unreachable backend (status `0`) → "Something went wrong. Please try again." (B4)
-- [ ] **3.2 Players API:** `src/api/players.ts` with the `Player` type and `getPlayer(id)`
-- [ ] **3.3 Date formatting:** `src/utils/format-date.ts`, ISO string → "23 Oct 2026, 12:15" in local time with `Intl.DateTimeFormat` (B5)
-- [ ] **3.4 Views:** `PlayerProfileView.vue` (loading state, timing tower card with nickname, "Created", "Last change"; `404` and `400` → not found view; other errors → general message) and `PlayerNotFoundView.vue` (message, link to `/`)
-- [ ] **3.5 Router:** route `/players/:playerId`
-- [ ] **3.6** Verify: a player created with `curl` is shown at `/players/{id}` (AC8); an unknown UUID and `123` show the not found screen (AC9); with the backend stopped, the profile shows the general error message
-- [ ] **3.7** `make frontend-lint` passes. Commit phase 3.
+- [x] **3.1 API client:** `src/api/client.ts` with `request<T>(method, path, body?)` and `ApiError` (`status`, message). Error body → its `error` message; `500` and an unreachable backend (status `0`) → "Something went wrong. Please try again." (B4)
+- [x] **3.2 Players API:** `src/api/players.ts` with the `Player` type and `getPlayer(id)`
+- [x] **3.3 Date formatting:** `src/utils/format-date.ts`, ISO string → "23 Oct 2026, 12:15" in local time with `Intl.DateTimeFormat` (B5)
+- [x] **3.4 Views:** `PlayerProfileView.vue` (loading state, timing tower card with nickname, "Created", "Last change"; `404` and `400` → not found view; other errors → general message) and `PlayerNotFoundView.vue` (message, link to `/`)
+- [x] **3.5 Router:** route `/players/:playerId`
+- [x] **3.6** Verify: a player created with `curl` is shown at `/players/{id}` (AC8); an unknown UUID and `123` show the not found screen (AC9); with the backend stopped, the profile shows the general error message
+- [x] **3.7** `make frontend-lint` passes. Commit phase 3.
 
 ## Phase 4: Create player
 
