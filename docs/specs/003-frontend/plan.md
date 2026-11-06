@@ -32,34 +32,35 @@ No state management library (Pinia) and no toast library: each screen loads its 
 
 ## Docker
 
-The frontend runs exactly like in `notes-app`: a `frontend` service in `compose.yaml`, without its own Dockerfile.
+The frontend runs like in `notes-app`: a `frontend` service in `compose.yaml`, without its own Dockerfile.
 
 ```yaml
 frontend:
   image: node:24-alpine
+  user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+  init: true
   working_dir: /app
   # Install dependencies on start (fast when up to date), then run the Vite dev server
   command: sh -c "npm install --no-audit --no-fund && npm run dev"
   environment:
+    HOME: /tmp
     NPM_CONFIG_UPDATE_NOTIFIER: "false"
   ports:
     - "${FRONTEND_PORT:-5173}:5173"
   volumes:
     - ./frontend:/app
-    # node_modules stay inside the container (Linux binaries, not mixed with the host)
-    - frontend_node_modules:/app/node_modules
   depends_on:
     - app
 ```
 
 - **Proxy instead of CORS:** the Vite dev server forwards `/v1/*` to `http://app:3000`. The browser talks only to `localhost:5173`, so the backend needs no CORS setup. Frontend routes (`/`, `/players/…`) do not start with `/v1`, so they never collide.
-- **`node_modules` in a named volume:** unlike the backend, the frontend keeps them in the container only, as in `notes-app`. See "Editor support" below for what this means in VS Code.
-- **User:** the service runs as root like in `notes-app`, because a new named volume is owned by root and `npm install` must be able to write into it.
+- **`node_modules` on the bind mount:** like the backend, `frontend/node_modules` lives in the project folder (ignored by git), so VS Code resolves the types. See "Editor support" below.
+- **User:** the service runs with the host user id like the backend, so files it writes belong to the host user.
 - **Ports:** `FRONTEND_PORT` added to `.env.example`.
 
 ### Editor support
 
-With `node_modules` only in the container, VS Code cannot resolve `vue` and other types in `frontend/`. This is the trade-off `notes-app` makes. If it gets in the way, phase 1 can switch to a bind-mounted `node_modules` like the backend has. This is decided while doing phase 1, after trying it.
+Decided in phase 1 (2026-11-06): `notes-app` keeps `node_modules` in a named volume, but then VS Code cannot resolve `vue` and other types in `frontend/`. The frontend therefore keeps `node_modules` on the bind mount like the backend. The packages are installed in the Linux container and are never run on the host; the editor only reads their type declarations.
 
 ### Makefile
 
@@ -80,8 +81,8 @@ With `node_modules` only in the container, VS Code cannot resolve `vue` and othe
 - Remove what the scaffold adds but this project does not use: example components, views and assets
 - `vite.config.ts`: `server.host` `0.0.0.0`, port `5173`, `strictPort`, proxy `/v1` → `http://app:3000`
 - `src/App.vue`: only the app name as a heading and `<RouterView />`
-- `src/router/index.ts`: no routes yet except a redirect of unknown paths to `/`
-- `frontend` service and `frontend_node_modules` volume in `compose.yaml`, `FRONTEND_PORT` in `.env.example`
+- `src/router/index.ts`: no routes yet. A redirect of unknown paths to `/` would also match `/` itself and loop, so it comes in phase 4 together with the `/` route.
+- `frontend` service in `compose.yaml`, `FRONTEND_PORT` in `.env.example`
 - Makefile targets from the table above
 
 **Done when:** after `make up` the page at http://localhost:5173 shows the app name; `curl http://localhost:5173/v1/players/123` returns the backend's `400` `{"error":"playerId must be a UUID"}` through the proxy; changing `App.vue` reloads the page; `make frontend-lint` passes.
@@ -140,7 +141,7 @@ In the order data travels:
    - shows an error message passed in by the parent below the input, connected with `aria-describedby` and announced with `role="alert"`
    - emits `submit` with the value, keeps the value after an error
 3. **View** `src/views/CreatePlayerView.vue`: headline about the game, the form; on success navigates to `/players/{id}` (AC3); on `ApiError` shows its message in the form (AC4, AC5, B1, B4)
-4. **Router:** route `/` (the redirect of unknown paths stays)
+4. **Router:** route `/` and a redirect of unknown paths to `/`
 
 **Done when:** AC3 to AC7 work in the browser.
 

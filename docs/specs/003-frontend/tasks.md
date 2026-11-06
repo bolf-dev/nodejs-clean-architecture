@@ -13,15 +13,16 @@ Every command runs through `make` or in a container, never on the host.
 
 ## Phase 1: Vue project in Docker
 
-- [ ] **1.1** Scaffold `frontend/` with `create-vue` in a `node:24-alpine` container: TypeScript, Vue Router, ESLint + Oxlint, Prettier, without example code
-- [ ] **1.2** Remove the example components, views and assets the scaffold adds. Record the installed packages in the tech-stack dependency log.
-- [ ] **1.3** `vite.config.ts`: `server.host` `0.0.0.0`, port `5173`, `strictPort`, proxy `/v1` → `http://app:3000`
-- [ ] **1.4** `src/App.vue` with only the app name as a heading and `<RouterView />`; `src/router/index.ts` with only a redirect of unknown paths to `/`
-- [ ] **1.5** Add the `frontend` service and the `frontend_node_modules` volume to `compose.yaml`, `FRONTEND_PORT` to `.env.example`
-- [ ] **1.6** Add `make frontend-logs`, `make frontend-npm c="…"` and `make frontend-lint` (ESLint, Oxlint, `vue-tsc`)
-- [ ] **1.7** Try the editor support in VS Code with `node_modules` in the named volume. If missing types get in the way, switch to a bind-mounted `node_modules` like the backend and note the decision in the plan.
-- [ ] **1.8** Verify: after `make up` http://localhost:5173 shows the app name; `curl -i http://localhost:5173/v1/players/123` returns `400` `{"error":"playerId must be a UUID"}`; changing `App.vue` reloads the page
-- [ ] **1.9** `make frontend-lint` and `make lint` pass. Commit phase 1.
+- [x] **1.1** Scaffold `frontend/` with `create-vue` in a `node:24-alpine` container: TypeScript, Vue Router, ESLint + Oxlint, Prettier, without example code
+- [x] **1.2** Remove the example components, views and assets the scaffold adds. Record the installed packages in the tech-stack dependency log.
+- [x] **1.3** `vite.config.ts`: `server.host` `0.0.0.0`, port `5173`, `strictPort`, proxy `/v1` → `http://app:3000`
+- [x] **1.4** `src/App.vue` with only the app name as a heading and `<RouterView />`; `src/router/index.ts` without routes
+- [x] **1.5** Add the `frontend` service to `compose.yaml`, `FRONTEND_PORT` to `.env.example`
+- [x] **1.6** Add `make frontend-logs`, `make frontend-npm c="…"` and `make frontend-lint` (ESLint, Oxlint, `vue-tsc`)
+- [x] **1.7** Try the editor support in VS Code with `node_modules` in a named volume. If missing types get in the way, switch to a bind-mounted `node_modules` like the backend and note the decision in the plan.
+  - Types were missing, switched to the bind mount (2026-11-06)
+- [x] **1.8** Verify: after `make up` http://localhost:5173 shows the app name; `curl -i http://localhost:5173/v1/players/123` returns `400` `{"error":"playerId must be a UUID"}`; changing `App.vue` reloads the page
+- [x] **1.9** `make frontend-lint` and `make lint` pass. Commit phase 1.
 
 ## Phase 2: Layout and F1 design
 
@@ -51,7 +52,7 @@ Created in the order data travels.
 - [ ] **4.1 Players API:** `createPlayer(nickname)` returning `{ id }`
 - [ ] **4.2 Form:** `src/components/NicknameForm.vue`: label "Nickname", one input, submit label from the parent, disabled when the trimmed value is empty or while submitting, working state while submitting, error message below the input with `aria-describedby` and `role="alert"`, emits `submit`, keeps the value after an error
 - [ ] **4.3 View:** `src/views/CreatePlayerView.vue`: headline about the game, the form; success → `/players/{id}`; `ApiError` → its message in the form
-- [ ] **4.4 Router:** route `/`
+- [ ] **4.4 Router:** route `/` and a redirect of unknown paths to `/`
 - [ ] **4.5** Verify AC3 to AC7 in the browser
 - [ ] **4.6** `make frontend-lint` passes. Commit phase 4.
 
