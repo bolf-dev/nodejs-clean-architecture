@@ -65,12 +65,14 @@ Created in the order data travels.
 
 ## Phase 6: Acceptance check and README
 
-- [ ] **6.1** Go through AC1 to AC15 at 360 px and on a desktop window, with the backend running and stopped. AC1 from scratch: `docker compose down -v`, `make init`.
-- [ ] **6.2** Fix what does not meet the spec
-- [ ] **6.3** Update the README: the frontend in "Getting started", the new `make` targets, the `frontend` service and `FRONTEND_PORT` in the configuration, a short "Frontend" section (Vue 3, Vite, proxy to the backend)
-- [ ] **6.4** `make frontend-lint`, `make lint`, `make test` and `make test-e2e` pass. Commit phase 6.
+- [x] **6.1** Go through AC1 to AC15 at 360 px and on a desktop window, with the backend running and stopped. AC1 from scratch: `docker compose down -v`, `make init`.
+  - AC3 to AC12 checked in the browser by the project owner during phases 3 to 5. AC1 counted as covered: the frontend service installed `node_modules` from scratch and started on its own in phase 1, so the database was not wiped.
+- [x] **6.2** Fix what does not meet the spec
+- [x] **6.3** Update the README: the frontend in "Getting started", the new `make` targets, the `frontend` service and `FRONTEND_PORT` in the configuration, a short "Frontend" section (Vue 3, Vite, proxy to the backend)
+- [x] **6.4** `make frontend-lint`, `make lint`, `make test` and `make test-e2e` pass. Commit phase 6.
 
 ## Finish
 
 - [ ] **F.1** Check off 003 in the roadmap, set spec, plan and tasks to done
-- [ ] **F.2** After approval of the project owner: push the branch and open a pull request
+- [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
+- [ ] **F.3** After approval of the project owner: push the branch and open a pull request
