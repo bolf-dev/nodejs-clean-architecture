@@ -35,57 +35,7 @@ A web frontend for the players endpoints of 002, in the style of Formula 1 TV gr
 - Vue 3 in `frontend/`, running in Docker next to the backend
 - Screens to create a player, see a player and change the nickname
 
-## 004 Season sync
-
-- [ ] Spec, plan, tasks
-- [ ] Implementation
-
-Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProvider` port.
-
-- `POST /v1/seasons/{year}/sync`: load or update races and drivers of a season. Running it again updates changed session times.
-- `GET /v1/races?season=2026`: calendar with deadlines and whether predictions are open
-- `GET /v1/races/{raceId}`: race detail
-- `GET /v1/drivers?season=2026`: drivers eligible in the season
-- Data: `races` (season, round, name, circuit, country, session times, status `SCHEDULED` / `FINISHED` / `CANCELLED`), `drivers` (external id, code, number, name, team), `season_drivers`
-- Whether a race is open for predictions is derived from its deadline and the `Clock` port, not stored
-- Jolpica: `/{season}.json` (calendar with `Qualifying` and `SprintQualifying` times), `/{season}/drivers.json` (drivers without a team)
-
-## 005 Predictions
-
-- [ ] Spec, plan, tasks
-- [ ] Implementation
-
-Submitting predictions with the deadline and validation rules.
-
-- `PUT /v1/races/{raceId}/predictions/{playerId}`: submit or replace a prediction `{ "pole": "NOR", "p1": "VER", "p2": "NOR", "p3": "LEC" }`
-- `GET /v1/races/{raceId}/predictions/{playerId}`: one player's prediction
-- `GET /v1/races/{raceId}/predictions`: all predictions of a race, only after the deadline
-- Data: `predictions` (player, race, pole, P1, P2, P3, submitted and updated time)
-
-## 006 Results and scoring
-
-- [ ] Spec, plan, tasks
-- [ ] Implementation
-
-Importing official results and scoring all predictions of a race.
-
-- `POST /v1/races/{raceId}/results/import`: import the result, mark the race `FINISHED`, score its predictions (domain event `RaceFinished`). Running it again recalculates all scores of the race.
-- Prediction responses include the score and its breakdown
-- Driver teams are filled from race results
-- Data: `race_results` (pole, P1, P2, P3, imported time), `prediction_scores` (points, breakdown, calculated time)
-- Jolpica: `/{season}/{round}/qualifying.json` (pole), `/{season}/{round}/results.json` (podium, constructors)
-
-## 007 Standings and stats
-
-- [ ] Spec, plan, tasks
-- [ ] Implementation
-
-Read models for the season ranking and player statistics.
-
-- `GET /v1/standings?season=2026`: season standings with tie-breaking
-- `GET /v1/players/{playerId}` extended with season stats: points, exact positions, perfect podiums, best race
-
-## 008 Authentication
+## 004 Authentication
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -95,11 +45,89 @@ Players register with an email and a password and log in. Endpoints acting on be
 - Player creation from 002 is extended with an email and a password
 - `POST /v1/auth/login`: email and password in, access token (JWT) out
 - `GET /v1/players/me`: the logged-in player
-- Prediction endpoints use the logged-in player, e.g. `PUT /v1/races/{raceId}/predictions/me`
+- Changing the nickname uses the logged-in player: `PATCH /v1/players/me`. Later features act for the logged-in player from the start.
 - Ports `PasswordHasher` (argon2 adapter) and `TokenService` (JWT adapter). Checking the token is a NestJS guard in presentation.
 - Data: credentials (player, unique email, password hash)
+- Frontend: the create player screen becomes registration, plus login and logout; the header shows the logged-in player
 
-## 009 Quality
+## 005 Players list
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+All players of the league, so a player can find others and open their profile.
+
+- `GET /v1/players`: all players with id and nickname, ordered by nickname
+- Frontend: players page linked from the header, each player opens their profile
+
+## 006 Season sync
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProvider` port.
+
+- `POST /v1/seasons/{year}/sync`: load or update races and drivers of a season. Running it again updates changed session times.
+- `GET /v1/races?season=2026`: calendar
+- `GET /v1/races/{raceId}`: race detail
+- `GET /v1/drivers?season=2026`: drivers eligible in the season, with their team and team color for the driver cards
+- Data: `races` (season, round, name, circuit, country, session times, status `SCHEDULED` / `FINISHED` / `CANCELLED`), `drivers` (external id, code, number, name, team), `season_drivers`
+- Jolpica: `/{season}.json` (calendar with `Qualifying` and `SprintQualifying` times), `/{season}/drivers.json` (drivers). The source of teams and team colors is decided in the spec.
+- Frontend: calendar of the season with the race detail
+
+## 007 Predictions
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+Submitting predictions with the validation rules. Without a deadline yet: a prediction can be changed until the race result is imported.
+
+- `PUT /v1/races/{raceId}/predictions/me`: submit or replace the logged-in player's prediction `{ "pole": "NOR", "p1": "VER", "p2": "NOR", "p3": "LEC" }`
+- `GET /v1/races/{raceId}/predictions/me`: the logged-in player's prediction
+- `GET /v1/players/{playerId}/predictions`: a player's predictions in a season; other players' predictions only for finished races
+- Data: `predictions` (player, race, pole, P1, P2, P3, submitted and updated time)
+- Frontend: a grid of driver cards (number, code, name, team color) to pick the pole and the podium P1, P2, P3; my predictions, and the predictions of other players on their profiles
+
+## 008 Results and scoring
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+Importing official results and scoring all predictions of a race.
+
+- `POST /v1/races/{raceId}/results/import`: import the result, mark the race `FINISHED`, score its predictions (domain event `RaceFinished`). Running it again recalculates all scores of the race.
+- Scoring: 5 points for the pole, 10 for every podium driver in the exact position, at most 35
+- `GET /v1/races/{raceId}/predictions`: all predictions of a race with their scores, only for a finished race
+- Prediction responses include the score and its breakdown
+- Data: `race_results` (pole, P1, P2, P3, imported time), `prediction_scores` (points, breakdown, calculated time)
+- Jolpica: `/{season}/{round}/qualifying.json` (pole), `/{season}/{round}/results.json` (podium)
+- Frontend: race result with all predictions and their points, points on the player's predictions
+
+## 009 Leaderboard
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+Read models for the season ranking and player statistics.
+
+- `GET /v1/standings?season=2026`: season standings with tie-breaking
+- `GET /v1/players/{playerId}` extended with season stats: points, exact positions, perfect podiums, best race
+- Frontend: leaderboard page, stats on the player profile
+
+## 010 Deadline
+
+- [ ] Spec, plan, tasks
+- [ ] Implementation
+
+Predictions are locked at the deadline of the race, as described in the mission.
+
+- The deadline is derived from the session times of the race and compared with the time from the `Clock` port, not stored
+- Submitting or changing a prediction after the deadline is rejected
+- All predictions of a race become public at the deadline instead of with the result
+- Race responses show the deadline and whether predictions are open
+- Frontend: the deadline and a countdown on the race, a locked prediction after the deadline
+
+## 011 Quality
 
 - [ ] Spec, plan, tasks
 - [ ] Implementation
@@ -113,3 +141,4 @@ Players register with an email and a password and log in. Endpoints acting on be
 - Roles, so that only an administrator can sync seasons and import results
 - Scheduled sync of calendar and results
 - Sprint race predictions
+- Driver photos on the driver cards

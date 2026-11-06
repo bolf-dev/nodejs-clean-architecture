@@ -94,7 +94,7 @@ Inspired by Formula 1 TV graphics, without using the Formula 1 logo, name in a l
 ## Out of scope
 
 - A list of all players or search
-- Logging in, until roadmap item [008](../../product/roadmap.md#008-authentication)
+- Logging in, until roadmap item [004](../../product/roadmap.md#004-authentication)
 - Remembering the last created player in the browser
 - A light theme and other languages than English
 - Automated frontend tests (unit, component or end-to-end). The acceptance criteria are checked manually in the browser.
