@@ -13,14 +13,14 @@ Every command runs through `make`, never on the host.
 
 ## Phase 1: Registration with email and password
 
-- [ ] **1.1 Domain:** `Email` (R1, R2) and `Password` (R5, R6) value objects, `InvalidEmail`, `InvalidPassword`, `EmailAlreadyRegistered`
-- [ ] **1.2 Domain:** `Player.register` replaces `Player.create`, the aggregate gets `email` and `passwordHash`; `reconstitute` takes them; `PlayerRepository.existsWithEmail`
-- [ ] **1.3 Application:** `PasswordHasher` port; `RegisterPlayerCommand` and `RegisterPlayerHandler` replace `CreatePlayer…` (validation order email, nickname, password, then the two uniqueness checks)
-- [ ] **1.4 Infrastructure:** `ScryptPasswordHasher`, `FakePasswordHasher`; `PlayerRecord` with `email` and `passwordHash`, mapper, `MikroOrmPlayerRepository` (`existsWithEmail`, email index violation → `EmailAlreadyRegistered`), `InMemoryPlayerRepository`
-- [ ] **1.5 Migration:** generate with `make migration`, add `delete from players` before the new `not null` columns, review the SQL, `make migrate`
-- [ ] **1.6 Presentation:** `RegisterPlayerRequest` (`email`, `nickname`, `password`), controller and `PlayersModule` binding of `PasswordHasher`
-- [ ] **1.7 Tests:** unit tests of `Email`, `Password`, `Player.register`, `RegisterPlayerHandler`, `ScryptPasswordHasher`; existing e2e tests register with email and password; e2e AC1 to AC8
-- [ ] **1.8** `make test`, `make test-e2e` and `make lint` pass. Commit phase 1.
+- [x] **1.1 Domain:** `Email` (R1, R2) and `Password` (R5, R6) value objects, `InvalidEmail`, `InvalidPassword`, `EmailAlreadyRegistered`
+- [x] **1.2 Domain:** `Player.register` replaces `Player.create`, the aggregate gets `email` and `passwordHash`; `reconstitute` takes them; `PlayerRepository.existsWithEmail`
+- [x] **1.3 Application:** `PasswordHasher` port; `RegisterPlayerCommand` and `RegisterPlayerHandler` replace `CreatePlayer…` (validation order email, nickname, password, then the two uniqueness checks)
+- [x] **1.4 Infrastructure:** `ScryptPasswordHasher`, `FakePasswordHasher`; `PlayerRecord` with `email` and `passwordHash`, mapper, `MikroOrmPlayerRepository` (`existsWithEmail`, email index violation → `EmailAlreadyRegistered`), `InMemoryPlayerRepository`
+- [x] **1.5 Migration:** generate with `make migration`, add `delete from players` before the new `not null` columns, review the SQL, `make migrate`
+- [x] **1.6 Presentation:** `RegisterPlayerRequest` (`email`, `nickname`, `password`), controller and `PlayersModule` binding of `PasswordHasher`
+- [x] **1.7 Tests:** unit tests of `Email`, `Password`, `Player.register`, `RegisterPlayerHandler`, `ScryptPasswordHasher`; existing e2e tests register with email and password; e2e AC1 to AC8
+- [x] **1.8** `make test`, `make test-e2e` and `make lint` pass. Commit phase 1.
 
 ## Phase 2: Login
 

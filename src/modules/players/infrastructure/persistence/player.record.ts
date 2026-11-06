@@ -9,11 +9,15 @@ export const PlayerRecord = defineEntity({
   tableName: 'players',
   properties: {
     id: p.uuid().primary(),
+    email: p.string().length(254),
     nickname: p.string().length(20),
+    passwordHash: p.string().length(255),
     createdAt: p.datetime(),
     updatedAt: p.datetime(),
   },
   uniques: [
+    // Emails are stored in lower case, so a plain unique index is enough
+    { name: 'players_email_unique', properties: ['email'] },
     {
       // Nicknames are unique regardless of letter case, also for concurrent requests
       name: 'players_nickname_lower_unique',

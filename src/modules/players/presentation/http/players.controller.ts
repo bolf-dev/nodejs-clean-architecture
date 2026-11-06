@@ -14,11 +14,11 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import type { Response } from 'express';
 import { ChangeNicknameCommand } from '../../application/commands/change-nickname/change-nickname.command.js';
-import { CreatePlayerCommand } from '../../application/commands/create-player/create-player.command.js';
+import { RegisterPlayerCommand } from '../../application/commands/register-player/register-player.command.js';
 import { GetPlayerQuery } from '../../application/queries/get-player/get-player.query.js';
 import { ChangeNicknameRequest } from './change-nickname.request.js';
-import { CreatePlayerRequest } from './create-player.request.js';
 import { PlayerResponse } from './player.response.js';
+import { RegisterPlayerRequest } from './register-player.request.js';
 
 const playerIdPipe = new ParseUUIDPipe({
   exceptionFactory: () => new BadRequestException('playerId must be a UUID'),
@@ -32,11 +32,13 @@ export class PlayersController {
   ) {}
 
   @Post()
-  async create(
-    @Body() request: CreatePlayerRequest,
+  async register(
+    @Body() request: RegisterPlayerRequest,
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ id: string }> {
-    const { id } = await this.commandBus.execute(new CreatePlayerCommand(request.nickname));
+    const { id } = await this.commandBus.execute(
+      new RegisterPlayerCommand(request.email, request.nickname, request.password),
+    );
     response.location(`/v1/players/${id}`);
     return { id };
   }
