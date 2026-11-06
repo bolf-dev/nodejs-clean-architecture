@@ -28,7 +28,7 @@ The first vertical slice through all layers, which sets the patterns for everyth
 Spec: [specs/003-frontend](../specs/003-frontend/spec.md)
 
 - [x] Spec, plan, tasks
-- [ ] Implementation
+- [x] Implementation
 
 A web frontend for the players endpoints of 002, in the style of Formula 1 TV graphics.
 

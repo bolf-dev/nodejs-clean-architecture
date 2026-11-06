@@ -1,6 +1,6 @@
 # 003 Frontend for players: plan
 
-- **Status:** Approved (2026-11-05)
+- **Status:** Done (2026-11-06)
 - **Spec:** [spec.md](spec.md)
 
 This plan describes **how** the [spec](spec.md) is implemented. Every phase creates only what it uses itself, ends with something visible in the browser and its own commit, and is reviewed before the next one starts.

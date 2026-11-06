@@ -1,6 +1,6 @@
 # 003 Frontend for players
 
-- **Status:** Approved (2026-11-05)
+- **Status:** Done (2026-11-06)
 - **Roadmap:** [003](../../product/roadmap.md#003-frontend-for-players)
 
 ## Why

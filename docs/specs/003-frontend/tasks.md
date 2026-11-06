@@ -1,6 +1,6 @@
 # 003 Frontend for players: tasks
 
-- **Status:** Approved (2026-11-05)
+- **Status:** Done (2026-11-06)
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order, one at a time. Every phase creates only what it uses, ends with something visible in the browser, green checks and a commit on the `003-frontend` branch, then stops for review before the next phase starts.
@@ -73,6 +73,7 @@ Created in the order data travels.
 
 ## Finish
 
-- [ ] **F.1** Check off 003 in the roadmap, set spec, plan and tasks to done
-- [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
-- [ ] **F.3** After approval of the project owner: push the branch and open a pull request
+- [x] **F.1** Check off 003 in the roadmap, set spec, plan and tasks to done
+- [x] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
+  - Fixed: README list, roadmap and statuses (F.1), `make frontend-lint` no longer rewrites files. Left as is: the rare failed reload after a successful nickname change.
+- [x] **F.3** After approval of the project owner: push the branch and open a pull request

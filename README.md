@@ -112,6 +112,6 @@ The database schema is changed only through migrations in `src/database/migratio
 `.docker/Dockerfile` is a multi-stage build:
 
 - `development`: used by `compose.yaml`, source code and `node_modules` are bind-mounted from the project directory
+- `production`: compiled `dist/` with runtime dependencies only, running as the non-root `node` user
 
 The frontend has no Dockerfile: the `frontend` service runs the official `node:24-alpine` image with `frontend/` bind-mounted.
-- `production`: compiled `dist/` with runtime dependencies only, running as the non-root `node` user
