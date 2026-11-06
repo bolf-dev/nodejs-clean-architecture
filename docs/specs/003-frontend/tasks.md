@@ -57,11 +57,11 @@ Created in the order data travels.
 
 ## Phase 5: Change nickname
 
-- [ ] **5.1 Players API:** `changeNickname(id, nickname)` for the `204` response without a body
-- [ ] **5.2 Profile view:** "Change nickname" button shows `NicknameForm` prefilled, with "Save" and "Cancel" (hides the form, no request)
-- [ ] **5.3 Profile view:** success → reload with `getPlayer`, hide the form, "Nickname changed" with `role="status"` for a few seconds; `ApiError` → its message in the form, the shown nickname stays
-- [ ] **5.4** Verify AC10 to AC12 in the browser
-- [ ] **5.5** `make frontend-lint` passes. Commit phase 5.
+- [x] **5.1 Players API:** `changeNickname(id, nickname)` for the `204` response without a body
+- [x] **5.2 Profile view:** "Change nickname" button shows `NicknameForm` prefilled, with "Save" and "Cancel" (hides the form, no request)
+- [x] **5.3 Profile view:** success → reload with `getPlayer`, hide the form, "Nickname changed" with `role="status"` for a few seconds; `ApiError` → its message in the form, the shown nickname stays
+- [x] **5.4** Verify AC10 to AC12 in the browser
+- [x] **5.5** `make frontend-lint` passes. Commit phase 5.
 
 ## Phase 6: Acceptance check and README
 

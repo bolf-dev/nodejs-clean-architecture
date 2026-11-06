@@ -15,3 +15,7 @@ export function createPlayer(nickname: string): Promise<{ id: string }> {
 export function getPlayer(id: string): Promise<Player> {
   return request<Player>('GET', `/v1/players/${encodeURIComponent(id)}`)
 }
+
+export function changeNickname(id: string, nickname: string): Promise<void> {
+  return request<void>('PATCH', `/v1/players/${encodeURIComponent(id)}`, { nickname })
+}

@@ -5,11 +5,13 @@ const props = defineProps<{
   submitLabel: string
   submitting: boolean
   error: string | null
+  initialValue?: string
+  cancellable?: boolean
 }>()
 
-const emit = defineEmits<{ submit: [nickname: string] }>()
+const emit = defineEmits<{ submit: [nickname: string]; cancel: [] }>()
 
-const nickname = ref('')
+const nickname = ref(props.initialValue ?? '')
 const inputId = useId()
 const errorId = useId()
 
@@ -44,6 +46,15 @@ function onSubmit(): void {
         :aria-busy="submitting"
       >
         {{ submitting ? 'Working…' : submitLabel }}
+      </button>
+      <button
+        v-if="cancellable"
+        type="button"
+        class="nickname-form__cancel"
+        :disabled="submitting"
+        @click="emit('cancel')"
+      >
+        Cancel
       </button>
     </div>
   </form>
@@ -102,7 +113,19 @@ function onSubmit(): void {
   clip-path: polygon(var(--space-3) 0, 100% 0, calc(100% - var(--space-3)) 100%, 0 100%);
 }
 
-.nickname-form__submit:disabled {
+.nickname-form__cancel {
+  padding: var(--space-3) var(--space-4);
+  background: none;
+  border: 0;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.nickname-form__submit:disabled,
+.nickname-form__cancel:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

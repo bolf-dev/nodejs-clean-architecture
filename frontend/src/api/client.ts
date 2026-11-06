@@ -27,6 +27,11 @@ export async function request<T>(method: string, path: string, body?: unknown): 
     throw new ApiError(response.status, await errorMessage(response))
   }
 
+  // 204 No Content has no body to parse
+  if (response.status === 204) {
+    return undefined as T
+  }
+
   return (await response.json()) as T
 }
 
