@@ -78,6 +78,7 @@ Every module is split into four layers. Dependencies point inwards only: present
 | Status | When                                                                        |
 |--------|-----------------------------------------------------------------------------|
 | 400    | Invalid request shape, or a value rejected by a value object                |
+| 401    | The request needs a valid access token, or the login credentials are wrong  |
 | 404    | A referenced resource does not exist                                        |
 | 409    | Conflict with existing data, e.g. a unique value is taken                   |
 | 422    | A business rule prevents the action                                         |
@@ -106,3 +107,4 @@ Changes to this document are explicit decisions of the project owner and are lis
 - 2026-10-23: initial version
 - 2026-10-27: a phase creates only what it uses (1.7); CQRS follows the NestJS recipe with controllers calling the buses directly (5); events only when something reacts to them (5, 6)
 - 2026-10-30: layer rules are kept by review instead of an automated lint check (3)
+- 2026-11-06: status 401 for a missing or invalid access token and wrong login credentials (7)
