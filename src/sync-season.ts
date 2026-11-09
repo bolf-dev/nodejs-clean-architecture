@@ -1,4 +1,5 @@
 import { MikroORM, RequestContext } from '@mikro-orm/postgresql';
+import type { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { CommandBus } from '@nestjs/cqrs';
 import { AppModule } from './app.module.js';
@@ -16,11 +17,14 @@ async function syncSeason(): Promise<void> {
     return;
   }
 
-  const app = await NestFactory.createApplicationContext(AppModule, { logger: ['error', 'warn'] });
+  let app: INestApplicationContext | undefined;
   try {
+    // Inside try, so a failing start (e.g. an unreachable database) also gets the message below
+    const context = await NestFactory.createApplicationContext(AppModule, { logger: ['error', 'warn'] });
+    app = context;
     // Outside an HTTP request MikroORM needs its own context, which a request gets from its middleware
-    const summary = await RequestContext.create(app.get(MikroORM).em, () =>
-      app.get(CommandBus).execute(new SyncSeasonCommand(Number(year))),
+    const summary = await RequestContext.create(context.get(MikroORM).em, () =>
+      context.get(CommandBus).execute(new SyncSeasonCommand(Number(year))),
     );
     process.stdout.write(
       `${year}: ${summary.races} races (${summary.created} new, ${summary.updated} updated), ${summary.drivers} drivers\n`,
@@ -29,7 +33,7 @@ async function syncSeason(): Promise<void> {
     process.stderr.write(`Sync of ${year} failed, nothing was changed: ${(error as Error).message}\n`);
     process.exitCode = 1;
   } finally {
-    await app.close();
+    await app?.close();
   }
 }
 await syncSeason();
