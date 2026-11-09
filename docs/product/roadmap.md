@@ -106,7 +106,7 @@ Importing official results and scoring all predictions of a race.
 - Prediction responses include the score and its breakdown
 - Data: `race_results` (pole, P1, P2, P3, imported time), `prediction_scores` (points, breakdown, calculated time)
 - Jolpica: `/{season}/{round}/qualifying.json` (pole), `/{season}/{round}/results.json` (podium)
-- Frontend: race result with all predictions and their points, points on the player's predictions
+- Frontend: race result with all predictions and their points, points on the player's predictions; the top 3 of finished races in the calendar
 
 ## 009 Leaderboard
 

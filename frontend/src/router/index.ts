@@ -4,6 +4,8 @@ import LoginView from '@/views/LoginView.vue'
 import MyProfileView from '@/views/MyProfileView.vue'
 import PlayerProfileView from '@/views/PlayerProfileView.vue'
 import PlayersView from '@/views/PlayersView.vue'
+import RacesView from '@/views/RacesView.vue'
+import RaceView from '@/views/RaceView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 
 declare module 'vue-router' {
@@ -21,6 +23,8 @@ const router = createRouter({
     { path: '/', component: MyProfileView },
     { path: '/players', component: PlayersView },
     { path: '/players/:playerId', component: PlayerProfileView, props: true },
+    { path: '/races', component: RacesView },
+    { path: '/races/:raceId', component: RaceView, props: true },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
 })
