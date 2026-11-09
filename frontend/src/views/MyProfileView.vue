@@ -17,6 +17,10 @@ const statusMessage = ref('')
 let statusTimer: ReturnType<typeof setTimeout> | undefined
 
 async function load(): Promise<void> {
+  // Already loaded after login or by App.vue after a page reload
+  if (me.value !== null) {
+    return
+  }
   try {
     await refreshCurrentPlayer()
   } catch (error) {

@@ -36,11 +36,11 @@ Some of these are listed as ideas for later in the [roadmap](roadmap.md).
 2. Until the **deadline**, every player can submit a prediction for the race: pole position, P1, P2 and P3, picked from a grid of the season's drivers. Submitting again replaces the previous prediction.
 3. The deadline is the start of the first competitive session of the weekend: sprint qualifying on sprint weekends, qualifying on the others. It always follows the current schedule.
 4. Before the deadline a player sees only their own prediction. After the deadline all predictions for the race are public.
-
-The deadline is the last game feature, roadmap item [010](roadmap.md#010-deadline). Until then a prediction can be changed until the race result is imported, and the predictions of other players become public with the result.
 5. After the race the official results are imported and all predictions are scored.
 6. If results change later, e.g. after a post-race penalty, they are imported again and all scores of the race are recalculated.
 7. A cancelled race does not count. Its predictions earn no points.
+
+The deadline is the last game feature, roadmap item [010](roadmap.md#010-deadline). Until then a prediction can be changed until the race result is imported, and the predictions of other players become public with the result.
 
 ### Prediction
 

@@ -68,5 +68,6 @@ Every command runs through `make`, never on the host.
 ## Finish
 
 - [x] **F.1** Check off 004 in the roadmap, set spec, plan and tasks to done
-- [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
-- [ ] **F.3** After approval of the project owner: push the branch and open a pull request
+- [x] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
+  - Fixed: the mission list, the roadmap text of 004, scrypt cost settings stored in the hash, no second `GET /me` on my profile. Left as is: a failed login right after a successful registration.
+- [x] **F.3** After approval of the project owner: push the branch and open a pull request

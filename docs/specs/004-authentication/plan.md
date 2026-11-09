@@ -45,7 +45,7 @@ Login and authentication are **queries**: they change no state, they read creden
 
 | Area             | Choice                                     | Reason |
 |------------------|--------------------------------------------|--------|
-| Password hashing | `scrypt` from `node:crypto`, random 16-byte salt, stored as `scrypt$<salt>$<hash>` | Slow and salted (T2), built into Node.js, no native dependency to build in Alpine. Same reasoning as `randomUUID()` and `fetch`. |
+| Password hashing | `scrypt` from `node:crypto`, random 16-byte salt, stored as `scrypt$N=16384,r=8,p=1$<salt>$<hash>` with the cost settings, so they can be raised later | Slow and salted (T2), built into Node.js, no native dependency to build in Alpine. Same reasoning as `randomUUID()` and `fetch`. |
 | Tokens           | `@nestjs/jwt` (HS256)                      | The NestJS way to sign and verify JWTs, used in its authentication recipe |
 | Secret           | `JWT_SECRET` environment variable, at least 32 characters (T1) | Validated at startup in `environment.ts`. `compose.yaml` sets a development value, e2e tests use the same. |
 

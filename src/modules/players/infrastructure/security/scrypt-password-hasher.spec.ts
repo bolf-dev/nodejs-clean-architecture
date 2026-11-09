@@ -8,7 +8,7 @@ describe('ScryptPasswordHasher', () => {
   it('stores a salted scrypt hash, not the password (R6, T2)', async () => {
     const hash = await hasher.hash(password);
 
-    expect(hash).toMatch(/^scrypt\$[^$]+\$[^$]+$/);
+    expect(hash).toMatch(/^scrypt\$N=16384,r=8,p=1\$[^$]+\$[^$]+$/);
     expect(hash).not.toContain('correct-horse');
   });
 

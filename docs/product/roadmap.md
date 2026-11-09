@@ -42,13 +42,13 @@ Spec: [specs/004-authentication](../specs/004-authentication/spec.md)
 - [x] Spec, plan, tasks
 - [x] Implementation
 
-Players register with an email and a password and log in. Endpoints acting on behalf of a player take the player from the access token instead of the URL. Commands, handlers and the domain stay unchanged, mostly the presentation layer changes.
+Players register with an email and a password and log in. Endpoints acting on behalf of a player take the player from the access token instead of the URL.
 
 - Player creation from 002 is extended with an email and a password
 - `POST /v1/auth/login`: email and password in, access token (JWT) out
 - `GET /v1/players/me`: the logged-in player
 - Changing the nickname uses the logged-in player: `PATCH /v1/players/me`. Later features act for the logged-in player from the start.
-- Ports `PasswordHasher` (argon2 adapter) and `TokenService` (JWT adapter). Checking the token is a NestJS guard in presentation.
+- Ports `PasswordHasher` (scrypt adapter) and `TokenService` (JWT adapter). Checking the token is a NestJS guard in presentation.
 - Data: credentials (player, unique email, password hash)
 - Frontend: the create player screen becomes registration, plus login and logout; the header shows the logged-in player
 
