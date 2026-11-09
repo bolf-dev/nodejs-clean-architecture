@@ -51,7 +51,11 @@ export class JolpicaF1DataProvider implements F1DataProvider {
   }
 
   async latestRaceStarters(year: number): Promise<GridDriverData[]> {
-    const response = await this.get(`/${year}/last/results.json?limit=100`);
+    const response = await this.request(`/${year}/last/results.json?limit=100`);
+    // Before the first race of a season Jolpica answers 404 "Race round not found"
+    if (response === null) {
+      return [];
+    }
     const [race] = list(response.MRData?.RaceTable?.Races, 'races');
     return race === undefined ? [] : list(race.Results, 'results').map(toGridDriver);
   }
@@ -68,11 +72,23 @@ export class JolpicaF1DataProvider implements F1DataProvider {
   }
 
   private async get(path: string): Promise<JolpicaResponse> {
+    const response = await this.request(path);
+    if (response === null) {
+      throw new F1DataUnavailable(`Jolpica F1 API answered 404 for ${path}`);
+    }
+    return response;
+  }
+
+  /** The parsed response, or null when Jolpica answers 404. */
+  private async request(path: string): Promise<JolpicaResponse | null> {
     let response: Response;
     try {
       response = await fetch(`${BASE_URL}${path}`);
     } catch (error) {
       throw new F1DataUnavailable(`Jolpica F1 API cannot be reached: ${(error as Error).message}`);
+    }
+    if (response.status === 404) {
+      return null;
     }
     if (!response.ok) {
       throw new F1DataUnavailable(`Jolpica F1 API answered ${response.status} for ${path}`);

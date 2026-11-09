@@ -58,6 +58,10 @@ describe('JolpicaF1DataProvider', () => {
     expect(starters.filter(({ code }) => code === null).map(({ lastName }) => lastName)).toEqual(['Camara']);
   });
 
+  it('has no starters before the first race, when Jolpica answers 404 (R7)', async () => {
+    expect(await provider.latestRaceStarters(2027)).toEqual([]);
+  });
+
   it('reads the drivers of the season, also those without a code or a number', async () => {
     const drivers = await provider.seasonDrivers(2026);
 

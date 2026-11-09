@@ -5,7 +5,7 @@ RUN := docker compose run --rm --no-deps app
 RUN_WITH_DB := docker compose run --rm app
 RUN_FRONTEND := docker compose run --rm --no-deps frontend
 
-.PHONY: help init up down restart logs install npm migration migrate migrate-down test test-e2e lint format shell psql prod-build frontend-logs frontend-npm frontend-lint
+.PHONY: help init up down restart logs install npm migration migrate migrate-down sync-season test test-e2e lint format shell psql prod-build frontend-logs frontend-npm frontend-lint
 
 help: ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -38,6 +38,9 @@ migrate: ## Apply pending migrations
 
 migrate-down: ## Revert the last migration
 	$(RUN_WITH_DB) npx mikro-orm migration:down
+
+sync-season: ## Load or update the races and drivers of a season from the Jolpica F1 API in the running app, e.g. make sync-season year=2026
+	docker compose exec app node dist/sync-season.js $(year)
 
 test: ## Run unit tests
 	$(RUN) npm test
