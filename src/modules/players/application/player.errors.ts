@@ -12,3 +12,17 @@ export class InvalidCredentials extends UnauthorizedError {
     super('Invalid email or password');
   }
 }
+
+/** The request has no `Authorization: Bearer …` header. */
+export class AuthenticationRequired extends UnauthorizedError {
+  constructor() {
+    super('Authentication required');
+  }
+}
+
+/** The token is malformed, signed with another secret, expired, or its player no longer exists. */
+export class InvalidAccessToken extends UnauthorizedError {
+  constructor() {
+    super('Invalid or expired access token');
+  }
+}

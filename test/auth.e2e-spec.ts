@@ -1,8 +1,9 @@
 import type { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { clearDatabase, query } from './support/database.js';
-import { registration } from './support/registration.js';
+import { registerAndLogIn, registration } from './support/registration.js';
 import { createTestApp } from './support/test-app.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -148,6 +149,69 @@ describe('Authentication (e2e)', () => {
       const response = await logIn({ email: 'johndoe@example.com' }).expect(400);
 
       expect(response.body).toEqual({ error: 'password must be a string' });
+    });
+  });
+
+  describe('access', () => {
+    const getMe = (authorization?: string) => {
+      const call = request(app.getHttpServer()).get('/v1/players/me');
+      return authorization === undefined ? call : call.set('Authorization', authorization);
+    };
+
+    it('AC12 rejects a request without a Bearer token', async () => {
+      const response = await getMe().expect(401);
+
+      expect(response.body).toEqual({ error: 'Authentication required' });
+    });
+
+    it('AC13 rejects an expired token', async () => {
+      const { id } = await registerAndLogIn(app, 'JohnDoe');
+      const expired = new JwtService({ secret: process.env.JWT_SECRET }).sign({
+        sub: id,
+        exp: Math.floor(Date.now() / 1000) - 60,
+      });
+
+      const response = await getMe(`Bearer ${expired}`).expect(401);
+
+      expect(response.body).toEqual({ error: 'Invalid or expired access token' });
+    });
+
+    it('AC14 returns the logged-in player with the email', async () => {
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
+
+      const response = await getMe(authorization).expect(200);
+
+      expect(response.body).toMatchObject({ id, nickname: 'JohnDoe', email: expect.stringMatching(/@example\.com$/) });
+    });
+
+    it("AC15 returns another player's profile without the email", async () => {
+      const other = await registerAndLogIn(app, 'Ferrari_Fan');
+      const { authorization } = await registerAndLogIn(app, 'JohnDoe');
+
+      const response = await request(app.getHttpServer())
+        .get(`/v1/players/${other.id}`)
+        .set('Authorization', authorization)
+        .expect(200);
+
+      expect(response.body).not.toHaveProperty('email');
+    });
+
+    it('AC16 changes the own nickname; PATCH by player id is gone', async () => {
+      const other = await registerAndLogIn(app, 'Ferrari_Fan');
+      const { authorization } = await registerAndLogIn(app, 'JohnDoe');
+
+      await request(app.getHttpServer())
+        .patch('/v1/players/me')
+        .set('Authorization', authorization)
+        .send({ nickname: 'JaneDoe' })
+        .expect(204);
+      await request(app.getHttpServer())
+        .patch(`/v1/players/${other.id}`)
+        .set('Authorization', authorization)
+        .send({ nickname: 'Hacked' })
+        .expect(404);
+
+      expect((await getMe(authorization)).body.nickname).toBe('JaneDoe');
     });
   });
 });

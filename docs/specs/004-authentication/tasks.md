@@ -34,12 +34,12 @@ Every command runs through `make`, never on the host.
 
 ## Phase 3: Access
 
-- [ ] **3.1 Shared:** `@Public()` and `@CurrentPlayerId()` decorators
-- [ ] **3.2 Query:** `AuthenticateQuery`, `AuthenticateHandler`, `InvalidAccessToken`, `AuthenticationRequired`
-- [ ] **3.3 Guard:** `AccessTokenGuard`, registered as `APP_GUARD` in `PlayersModule`; registration and login marked `@Public()`
-- [ ] **3.4 Endpoints:** `GET /v1/players/me` with `MyPlayerResponse`, `PATCH /v1/players/me`, `PATCH /v1/players/:playerId` removed; `PlayerReadModel` with `email`, `PlayerResponse` without it
-- [ ] **3.5 Tests:** unit `AuthenticateHandler`; e2e AC12 to AC16; existing e2e tests send a token
-- [ ] **3.6** `make test`, `make test-e2e` and `make lint` pass. Commit phase 3.
+- [x] **3.1 Shared:** `@Public()` and `@CurrentPlayerId()` decorators
+- [x] **3.2 Query:** `AuthenticateQuery`, `AuthenticateHandler`, `InvalidAccessToken`, `AuthenticationRequired`
+- [x] **3.3 Guard:** `AccessTokenGuard`, registered as `APP_GUARD` in `PlayersModule`; registration and login marked `@Public()`
+- [x] **3.4 Endpoints:** `GET /v1/players/me` with `MyPlayerResponse`, `PATCH /v1/players/me`, `PATCH /v1/players/:playerId` removed; `PlayerReadModel` with `email`, `PlayerResponse` without it
+- [x] **3.5 Tests:** unit `AuthenticateHandler`; e2e AC12 to AC16; existing e2e tests send a token
+- [x] **3.6** `make test`, `make test-e2e` and `make lint` pass. Commit phase 3.
 
 ## Phase 4: Frontend session, login, registration and my profile
 

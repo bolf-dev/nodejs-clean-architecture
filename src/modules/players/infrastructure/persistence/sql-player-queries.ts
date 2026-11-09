@@ -6,6 +6,7 @@ import type { PlayerCredentials, PlayerReadModel } from '../../application/playe
 /** A row as plain SQL returns it. MikroORM returns timestamps of raw queries as strings. */
 interface PlayerRow {
   id: string;
+  email: string;
   nickname: string;
   created_at: string;
   updated_at: string;
@@ -19,13 +20,14 @@ export class SqlPlayerQueries implements PlayerQueries {
   async findById(id: string): Promise<PlayerReadModel | null> {
     const [row] = await this.em
       .getConnection()
-      .execute<PlayerRow[]>('select id, nickname, created_at, updated_at from players where id = ?', [id]);
+      .execute<PlayerRow[]>('select id, email, nickname, created_at, updated_at from players where id = ?', [id]);
 
     if (row === undefined) {
       return null;
     }
     return {
       id: row.id,
+      email: row.email,
       nickname: row.nickname,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),

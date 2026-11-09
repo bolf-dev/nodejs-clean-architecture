@@ -3,7 +3,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { PlayerRepository } from '../src/modules/players/domain/player.repository.port.js';
 import { clearDatabase, query } from './support/database.js';
-import { registration } from './support/registration.js';
+import { registerAndLogIn, registration } from './support/registration.js';
 import { createTestApp } from './support/test-app.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -19,11 +19,13 @@ describe('Players (e2e)', () => {
   let app: INestApplication<App>;
 
   const createPlayer = (body: object) => request(app.getHttpServer()).post('/v1/players').send(body);
-  const getPlayer = (path: string) => request(app.getHttpServer()).get(path);
-  const changeNickname = (id: string, body: object) =>
-    request(app.getHttpServer()).patch(`/v1/players/${id}`).send(body);
-  const createPlayerId = async (nickname: string): Promise<string> =>
-    (await createPlayer(registration(nickname)).expect(201)).body.id;
+  const getPlayer = (path: string, authorization: string) =>
+    request(app.getHttpServer()).get(path).set('Authorization', authorization);
+  // Since 004 a player changes only their own nickname, through /v1/players/me
+  const changeNickname = (authorization: string, body: object) =>
+    request(app.getHttpServer()).patch('/v1/players/me').set('Authorization', authorization).send(body);
+  const nicknameOf = async (id: string, authorization: string) =>
+    (await getPlayer(`/v1/players/${id}`, authorization).expect(200)).body.nickname;
   const storedPlayers = () => query<PlayerRow>(app, 'select * from players order by created_at');
 
   beforeAll(async () => {
@@ -45,7 +47,8 @@ describe('Players (e2e)', () => {
       expect(response.body).toEqual({ id: expect.stringMatching(UUID) });
       expect(response.headers.location).toBe(`/v1/players/${response.body.id}`);
 
-      const player = await getPlayer(response.headers.location as string).expect(200);
+      const viewer = await registerAndLogIn(app, 'Viewer');
+      const player = await getPlayer(response.headers.location as string, viewer.authorization).expect(200);
       expect(player.body).toMatchObject({ id: response.body.id, nickname: 'JohnDoe' });
       expect(player.body.createdAt).toBe(player.body.updatedAt);
     });
@@ -106,13 +109,13 @@ describe('Players (e2e)', () => {
 
   describe('GET /v1/players/{playerId}', () => {
     it('AC8 returns the player', async () => {
-      const created = await createPlayer(registration('JohnDoe')).expect(201);
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
       const [stored] = await storedPlayers();
 
-      const response = await getPlayer(`/v1/players/${created.body.id}`).expect(200);
+      const response = await getPlayer(`/v1/players/${id}`, authorization).expect(200);
 
       expect(response.body).toEqual({
-        id: created.body.id,
+        id,
         nickname: 'JohnDoe',
         createdAt: new Date(stored!.created_at).toISOString(),
         updatedAt: new Date(stored!.updated_at).toISOString(),
@@ -120,30 +123,33 @@ describe('Players (e2e)', () => {
     });
 
     it('AC9 returns 404 for an unknown id', async () => {
+      const { authorization } = await registerAndLogIn(app, 'JohnDoe');
       const id = '0199a1b2-7c3d-7e4f-8a5b-6c7d8e9f0a1b';
 
-      const response = await getPlayer(`/v1/players/${id}`).expect(404);
+      const response = await getPlayer(`/v1/players/${id}`, authorization).expect(404);
 
       expect(response.body).toEqual({ error: `Player "${id}" not found` });
     });
 
     it('AC10 returns 400 when the id is not a UUID', async () => {
-      const response = await getPlayer('/v1/players/123').expect(400);
+      const { authorization } = await registerAndLogIn(app, 'JohnDoe');
+
+      const response = await getPlayer('/v1/players/123', authorization).expect(400);
 
       expect(response.body).toEqual({ error: 'playerId must be a UUID' });
     });
   });
 
-  describe('PATCH /v1/players/{playerId}', () => {
+  describe('PATCH /v1/players/me', () => {
     it('AC11 changes the nickname and updatedAt, createdAt stays', async () => {
-      const id = await createPlayerId('JohnDoe');
-      const before = (await getPlayer(`/v1/players/${id}`)).body;
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
+      const before = (await getPlayer(`/v1/players/${id}`, authorization)).body;
 
       const requestedAt = Date.now();
-      await changeNickname(id, { nickname: 'Ferrari_Fan' }).expect(204);
+      await changeNickname(authorization, { nickname: 'Ferrari_Fan' }).expect(204);
       const respondedAt = Date.now();
 
-      const after = (await getPlayer(`/v1/players/${id}`).expect(200)).body;
+      const after = (await getPlayer(`/v1/players/${id}`, authorization).expect(200)).body;
       expect(after.nickname).toBe('Ferrari_Fan');
       expect(after.createdAt).toBe(before.createdAt);
       expect(new Date(after.updatedAt).getTime()).toBeGreaterThanOrEqual(requestedAt);
@@ -151,54 +157,46 @@ describe('Players (e2e)', () => {
     });
 
     it('AC12 allows changing only the letter case of the own nickname', async () => {
-      const id = await createPlayerId('JohnDoe');
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
 
-      await changeNickname(id, { nickname: 'JOHNDOE' }).expect(204);
+      await changeNickname(authorization, { nickname: 'JOHNDOE' }).expect(204);
 
-      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JOHNDOE');
+      expect(await nicknameOf(id, authorization)).toBe('JOHNDOE');
     });
 
     it('AC13 rejects a nickname of another player', async () => {
-      const id = await createPlayerId('JohnDoe');
-      await createPlayerId('Ferrari_Fan');
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
+      await registerAndLogIn(app, 'Ferrari_Fan');
 
-      const response = await changeNickname(id, { nickname: 'ferrari_fan' }).expect(409);
+      const response = await changeNickname(authorization, { nickname: 'ferrari_fan' }).expect(409);
 
       expect(response.body).toEqual({ error: 'Nickname "ferrari_fan" is already taken' });
-      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JohnDoe');
+      expect(await nicknameOf(id, authorization)).toBe('JohnDoe');
     });
 
     it.each(['ab', 'john!'])('AC14 rejects the invalid nickname "%s"', async (nickname) => {
-      const id = await createPlayerId('JohnDoe');
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
 
-      await changeNickname(id, { nickname }).expect(400);
+      await changeNickname(authorization, { nickname }).expect(400);
 
-      expect((await getPlayer(`/v1/players/${id}`)).body.nickname).toBe('JohnDoe');
+      expect(await nicknameOf(id, authorization)).toBe('JohnDoe');
     });
 
     it('AC15 keeps updatedAt when the nickname is exactly the same', async () => {
-      const id = await createPlayerId('JohnDoe');
-      const before = (await getPlayer(`/v1/players/${id}`)).body;
+      const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');
+      const before = (await getPlayer(`/v1/players/${id}`, authorization)).body;
 
-      await changeNickname(id, { nickname: 'JohnDoe' }).expect(204);
+      await changeNickname(authorization, { nickname: 'JohnDoe' }).expect(204);
 
-      expect((await getPlayer(`/v1/players/${id}`)).body.updatedAt).toBe(before.updatedAt);
+      expect((await getPlayer(`/v1/players/${id}`, authorization)).body.updatedAt).toBe(before.updatedAt);
     });
 
-    it('AC16 returns 404 for an unknown player and 400 for an id that is not a UUID', async () => {
-      const unknownId = '0199a1b2-7c3d-7e4f-8a5b-6c7d8e9f0a1b';
-
-      const notFound = await changeNickname(unknownId, { nickname: 'JohnDoe' }).expect(404);
-      const invalidId = await changeNickname('123', { nickname: 'JohnDoe' }).expect(400);
-
-      expect(notFound.body).toEqual({ error: `Player "${unknownId}" not found` });
-      expect(invalidId.body).toEqual({ error: 'playerId must be a UUID' });
-    });
+    // AC16 of 002 (unknown or invalid player id) no longer applies: the player comes from the token (004 AC16)
 
     it('AC17 rejects a body without a nickname', async () => {
-      const id = await createPlayerId('JohnDoe');
+      const { authorization } = await registerAndLogIn(app, 'JohnDoe');
 
-      const response = await changeNickname(id, {}).expect(400);
+      const response = await changeNickname(authorization, {}).expect(400);
 
       expect(response.body).toEqual({ error: 'nickname must be a string' });
     });
