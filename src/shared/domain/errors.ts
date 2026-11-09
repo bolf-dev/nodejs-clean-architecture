@@ -11,3 +11,6 @@ export abstract class ConflictError extends Error {}
 
 /** A referenced resource does not exist, e.g. an unknown player. */
 export abstract class NotFoundError extends Error {}
+
+/** The caller is not authenticated, e.g. wrong login credentials or an invalid access token. */
+export abstract class UnauthorizedError extends Error {}

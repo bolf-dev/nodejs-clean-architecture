@@ -27,24 +27,19 @@ function onSubmit(): void {
 
 <template>
   <form class="nickname-form" novalidate @submit.prevent="onSubmit">
-    <label :for="inputId" class="nickname-form__label">Nickname</label>
+    <label :for="inputId" class="form-label">Nickname</label>
     <input
       :id="inputId"
       v-model="nickname"
-      class="nickname-form__input"
+      class="form-input"
       type="text"
       autocomplete="off"
       :aria-invalid="error !== null"
       :aria-describedby="error ? errorId : undefined"
     />
-    <p v-if="error" :id="errorId" class="nickname-form__error" role="alert">{{ error }}</p>
+    <p v-if="error" :id="errorId" class="form-error" role="alert">{{ error }}</p>
     <div class="nickname-form__actions">
-      <button
-        type="submit"
-        class="nickname-form__submit"
-        :disabled="!canSubmit"
-        :aria-busy="submitting"
-      >
+      <button type="submit" class="button-primary" :disabled="!canSubmit" :aria-busy="submitting">
         {{ submitting ? 'Working…' : submitLabel }}
       </button>
       <button
@@ -66,51 +61,11 @@ function onSubmit(): void {
   gap: var(--space-2);
 }
 
-.nickname-form__label {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.nickname-form__input {
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-panel-border);
-  border-radius: var(--radius);
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-semibold);
-}
-
-.nickname-form__input[aria-invalid='true'] {
-  border-color: var(--color-error);
-}
-
-.nickname-form__error {
-  color: var(--color-error);
-}
-
 .nickname-form__actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
   margin-top: var(--space-2);
-}
-
-/* Primary action: F1 red with slanted sides */
-.nickname-form__submit {
-  padding: var(--space-3) var(--space-6);
-  background-color: var(--color-accent);
-  border: 0;
-  color: var(--color-text);
-  font-weight: var(--font-weight-bold);
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  clip-path: polygon(var(--space-3) 0, 100% 0, calc(100% - var(--space-3)) 100%, 0 100%);
 }
 
 .nickname-form__cancel {
@@ -124,7 +79,6 @@ function onSubmit(): void {
   cursor: pointer;
 }
 
-.nickname-form__submit:disabled,
 .nickname-form__cancel:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -1,7 +1,9 @@
 const NODE_ENVIRONMENTS = ['development', 'test', 'production'] as const;
+const JWT_SECRET_MIN_LENGTH = 32;
 
 export interface Environment {
   DATABASE_URL: string;
+  JWT_SECRET: string;
   PORT: number;
   NODE_ENV: (typeof NODE_ENVIRONMENTS)[number];
 }
@@ -20,6 +22,12 @@ export function validateEnvironment(variables: Record<string, unknown>): Environ
     errors.push('DATABASE_URL must be a PostgreSQL connection URL (postgresql://…)');
   }
 
+  // Signs the access tokens, so a short secret could be guessed (T1 of spec 004)
+  const jwtSecret = variables.JWT_SECRET;
+  if (typeof jwtSecret !== 'string' || jwtSecret.length < JWT_SECRET_MIN_LENGTH) {
+    errors.push(`JWT_SECRET is required and must be at least ${JWT_SECRET_MIN_LENGTH} characters long`);
+  }
+
   const port = Number(variables.PORT ?? 3000);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     errors.push('PORT must be an integer between 1 and 65535');
@@ -36,6 +44,7 @@ export function validateEnvironment(variables: Record<string, unknown>): Environ
 
   return {
     DATABASE_URL: databaseUrl as string,
+    JWT_SECRET: jwtSecret as string,
     PORT: port,
     NODE_ENV: nodeEnv as Environment['NODE_ENV'],
   };

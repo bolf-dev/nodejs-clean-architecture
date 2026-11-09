@@ -1,3 +1,4 @@
+import type { Email } from './email.value-object.js';
 import type { Nickname } from './nickname.value-object.js';
 import type { Player } from './player.aggregate.js';
 
@@ -14,6 +15,12 @@ export abstract class PlayerRepository {
    */
   abstract existsWithNickname(nickname: Nickname, exceptPlayerId?: string): Promise<boolean>;
 
-  /** Inserts a new player or updates an existing one. Throws NicknameAlreadyTaken when the nickname was taken in the meantime. */
+  /** Whether a player with this email exists (R3 of spec 004). Emails are stored in lower case. */
+  abstract existsWithEmail(email: Email): Promise<boolean>;
+
+  /**
+   * Inserts a new player or updates an existing one. Throws NicknameAlreadyTaken or EmailAlreadyRegistered
+   * when the nickname or the email was taken in the meantime.
+   */
   abstract save(player: Player): Promise<void>;
 }

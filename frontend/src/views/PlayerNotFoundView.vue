@@ -2,7 +2,7 @@
   <section class="not-found">
     <h1 class="not-found__title">Player not found</h1>
     <p class="not-found__text">There is no player with this id.</p>
-    <RouterLink to="/" class="not-found__link">Create a player</RouterLink>
+    <RouterLink to="/" class="not-found__link">Go to my profile</RouterLink>
   </section>
 </template>
 

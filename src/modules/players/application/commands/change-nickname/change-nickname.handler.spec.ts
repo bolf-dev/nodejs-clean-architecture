@@ -1,3 +1,4 @@
+import { Email } from '../../../domain/email.value-object.js';
 import { Nickname } from '../../../domain/nickname.value-object.js';
 import { Player } from '../../../domain/player.aggregate.js';
 import { InvalidNickname, NicknameAlreadyTaken } from '../../../domain/player.errors.js';
@@ -13,7 +14,15 @@ describe('ChangeNicknameHandler', () => {
   let handler: ChangeNicknameHandler;
 
   const addPlayer = (id: string, nickname: string) =>
-    repository.save(Player.create({ id, nickname: Nickname.create(nickname), now: CREATED_AT }));
+    repository.save(
+      Player.register({
+        id,
+        email: Email.create(`${id}@example.com`),
+        nickname: Nickname.create(nickname),
+        passwordHash: 'hashed:correct-horse',
+        now: CREATED_AT,
+      }),
+    );
   const nicknameOf = async (id: string) => (await repository.findById(id))?.nickname.value;
 
   beforeEach(async () => {

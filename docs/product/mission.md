@@ -2,7 +2,7 @@
 
 ## Pitch
 
-**F1 Prediction League** is a backend API for a Formula 1 prediction game. Before every Grand Prix, players predict the pole position and the podium. After the race the official results are imported, every prediction is scored and the season standings are updated.
+**F1 Prediction League** is a web app for a Formula 1 prediction game: a NestJS API with a Vue frontend. Before every Grand Prix, players predict the pole position and the podium. After the race the official results are imported, every prediction is scored and the season standings are updated.
 
 ## Why this project exists
 
@@ -20,11 +20,10 @@ The game is easy to understand, but it has real business rules (deadlines, valid
 
 ## Non-goals
 
-- Authentication until roadmap item [008](roadmap.md#008-authentication). Until then a player is identified by an id in the URL.
 - Roles and permissions. Every player has the same rights.
 - Private leagues and invitations
 - Sprint race predictions, constructors, fastest lap
-- Frontend
+- Driver photos. Drivers are shown as cards with number, code, name and team color.
 - Automatic scheduled synchronization. Data is loaded through endpoints.
 
 Some of these are listed as ideas for later in the [roadmap](roadmap.md).
@@ -34,12 +33,14 @@ Some of these are listed as ideas for later in the [roadmap](roadmap.md).
 ### Race weekend
 
 1. The season calendar and drivers are loaded from the official F1 data source.
-2. Until the **deadline**, every player can submit a prediction for the race: pole position, P1, P2 and P3. Submitting again replaces the previous prediction.
+2. Until the **deadline**, every player can submit a prediction for the race: pole position, P1, P2 and P3, picked from a grid of the season's drivers. Submitting again replaces the previous prediction.
 3. The deadline is the start of the first competitive session of the weekend: sprint qualifying on sprint weekends, qualifying on the others. It always follows the current schedule.
 4. Before the deadline a player sees only their own prediction. After the deadline all predictions for the race are public.
 5. After the race the official results are imported and all predictions are scored.
 6. If results change later, e.g. after a post-race penalty, they are imported again and all scores of the race are recalculated.
 7. A cancelled race does not count. Its predictions earn no points.
+
+The deadline is the last game feature, roadmap item [010](roadmap.md#010-deadline). Until then a prediction can be changed until the race result is imported, and the predictions of other players become public with the result.
 
 ### Prediction
 
@@ -49,16 +50,14 @@ Some of these are listed as ideas for later in the [roadmap](roadmap.md).
 
 ### Scoring
 
-| Rule                                                         | Points |
-|--------------------------------------------------------------|--------|
-| Pole position correct                                        | 5      |
-| Podium driver in the exact position (per driver)             | 10     |
-| Podium driver on the podium, but in a different position     | 3      |
-| Bonus: whole podium in the exact order                       | 10     |
+| Rule                                             | Points |
+|--------------------------------------------------|--------|
+| Pole position correct                            | 5      |
+| Podium driver in the exact position (per driver) | 10     |
 
-Maximum for one race: 5 + 3 × 10 + 10 = **45 points**.
+A podium driver in a different position earns nothing. Maximum for one race: 5 + 3 × 10 = **35 points**.
 
-Example: the result is VER, NOR, LEC with pole NOR, and the prediction is VER, LEC, NOR with pole NOR. The score is 5 (pole) + 10 (VER exact) + 3 (LEC on podium) + 3 (NOR on podium) = **21 points**.
+Example: the result is VER, NOR, LEC with pole NOR, and the prediction is VER, LEC, NOR with pole NOR. The score is 5 (pole) + 10 (VER exact) = **15 points**.
 
 ### Standings
 

@@ -7,7 +7,7 @@ import {
   type ExceptionFilter,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { ConflictError, NotFoundError, ValidationError } from '../../domain/errors.js';
+import { ConflictError, NotFoundError, UnauthorizedError, ValidationError } from '../../domain/errors.js';
 
 /**
  * Turns every error into a response with the body { "error": "<message>" }.
@@ -31,6 +31,9 @@ export class ErrorResponseFilter implements ExceptionFilter {
     }
     if (exception instanceof ConflictError) {
       return { status: HttpStatus.CONFLICT, message: exception.message };
+    }
+    if (exception instanceof UnauthorizedError) {
+      return { status: HttpStatus.UNAUTHORIZED, message: exception.message };
     }
     if (exception instanceof HttpException) {
       return { status: exception.getStatus(), message: exception.message };

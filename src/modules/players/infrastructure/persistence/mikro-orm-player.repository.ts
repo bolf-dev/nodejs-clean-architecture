@@ -1,14 +1,16 @@
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
+import type { Email } from '../../domain/email.value-object.js';
 import type { Nickname } from '../../domain/nickname.value-object.js';
 import type { Player } from '../../domain/player.aggregate.js';
-import { NicknameAlreadyTaken } from '../../domain/player.errors.js';
+import { EmailAlreadyRegistered, NicknameAlreadyTaken } from '../../domain/player.errors.js';
 import { PlayerRepository } from '../../domain/player.repository.port.js';
 import { PlayerMapper } from './player.mapper.js';
 import { PlayerRecord } from './player.record.js';
 
 const NICKNAME_INDEX = 'players_nickname_lower_unique';
+const EMAIL_INDEX = 'players_email_unique';
 
 @Injectable()
 export class MikroOrmPlayerRepository implements PlayerRepository {
@@ -33,13 +35,25 @@ export class MikroOrmPlayerRepository implements PlayerRepository {
     return rows.length > 0;
   }
 
+  async existsWithEmail(email: Email): Promise<boolean> {
+    const rows = await this.em
+      .getConnection()
+      .execute('select 1 from players where email = ? limit 1', [email.value]);
+    return rows.length > 0;
+  }
+
   async save(player: Player): Promise<void> {
     try {
       await this.em.upsert(PlayerRecord, PlayerMapper.toRecord(player));
     } catch (error) {
-      // Two requests with the same nickname at the same time: the unique index rejects the second one
-      if (error instanceof UniqueConstraintViolationException && error.message.includes(NICKNAME_INDEX)) {
-        throw new NicknameAlreadyTaken(player.nickname);
+      // Two requests with the same nickname or email at the same time: the unique index rejects the second one
+      if (error instanceof UniqueConstraintViolationException) {
+        if (error.message.includes(NICKNAME_INDEX)) {
+          throw new NicknameAlreadyTaken(player.nickname);
+        }
+        if (error.message.includes(EMAIL_INDEX)) {
+          throw new EmailAlreadyRegistered(player.email);
+        }
       }
       throw error;
     }

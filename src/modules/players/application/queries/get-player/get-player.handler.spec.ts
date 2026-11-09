@@ -15,6 +15,7 @@ describe('GetPlayerHandler', () => {
   it('returns the player', async () => {
     const player = {
       id: 'player-1',
+      email: 'johndoe@example.com',
       nickname: 'JohnDoe',
       createdAt: new Date('2026-10-23T10:15:00.000Z'),
       updatedAt: new Date('2026-10-23T10:15:00.000Z'),

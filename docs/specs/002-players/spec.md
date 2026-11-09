@@ -7,7 +7,7 @@
 
 Players are the simplest part of the game: they only need a nickname to take part. That makes them a good first vertical slice through all layers. This feature sets the patterns (module structure, CQRS, persistence, validation, errors, tests) that every later feature follows.
 
-A player has no credentials yet. Creating a player is not a login account, anyone can create one and use its id. Registration with an email and a password follows in roadmap item [008](../../product/roadmap.md#008-authentication).
+A player has no credentials yet. Creating a player is not a login account, anyone can create one and use its id. Registration with an email and a password follows in roadmap item [004](../../product/roadmap.md#004-authentication).
 
 ## User stories
 
@@ -149,5 +149,5 @@ This feature also lays the foundation for all later ones:
 - Deleting a player
 - History of nickname changes
 - Automated checks of layer dependencies in lint
-- Authentication: anyone can create, read and change any player, until [008](../../product/roadmap.md#008-authentication)
-- Player statistics (roadmap item [007](../../product/roadmap.md#007-standings-and-stats))
+- Authentication: anyone can create, read and change any player, until [004](../../product/roadmap.md#004-authentication)
+- Player statistics (roadmap item [009](../../product/roadmap.md#009-leaderboard))

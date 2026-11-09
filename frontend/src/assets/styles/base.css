@@ -51,6 +51,67 @@ a {
   outline-offset: 2px;
 }
 
+/* Panel like a TV info graphic: red accent bar on the side, cut top right corner */
+.panel {
+  max-width: 480px;
+  padding: var(--space-5);
+  background-color: var(--color-panel);
+  border-left: var(--space-2) solid var(--color-accent);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--corner-cut)) 0,
+    100% var(--corner-cut),
+    100% 100%,
+    0 100%
+  );
+}
+
+/* Form fields shared by every form */
+.form-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form-input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.form-error {
+  color: var(--color-error);
+}
+
+/* Primary action: F1 red with slanted sides */
+.button-primary {
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-accent);
+  border: 0;
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  clip-path: polygon(var(--space-3) 0, 100% 0, calc(100% - var(--space-3)) 100%, 0 100%);
+}
+
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Checkered flag motif, drawn with CSS gradients only */
 .checkered {
   --checker-size: 8px;
