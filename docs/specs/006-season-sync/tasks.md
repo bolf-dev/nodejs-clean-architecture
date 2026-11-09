@@ -11,11 +11,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 1: `Season` aggregate and persistence
 
-- [ ] **1.1** Domain: `DriverCode`, `Race`, `SeasonDriver`, `Season` (`create`, `reconstitute`, `syncRace`, `replaceGrid`), `SeasonRepository` port
-- [ ] **1.2** Infrastructure: `RaceRecord`, `SeasonDriverRecord`, `SeasonMapper`, `MikroOrmSeasonRepository`, `InMemorySeasonRepository`
-- [ ] **1.3** Migration of `races` and `season_drivers`, `SeasonsModule` registered in `AppModule`
-- [ ] **1.4** Tests: unit `Season` (a round synced twice is updated; `replaceGrid` keeps ids and removes drivers who left), `DriverCode`
-- [ ] **1.5** `make test` and `make lint` pass. Commit phase 1.
+- [x] **1.1** Domain: `DriverCode`, `Race`, `SeasonDriver`, `Season` (`create`, `reconstitute`, `syncRace`, `replaceGrid`), `SeasonRepository` port
+- [x] **1.2** Infrastructure: `RaceRecord`, `SeasonDriverRecord`, `SeasonMapper`, `MikroOrmSeasonRepository`, `InMemorySeasonRepository`
+- [x] **1.3** Migration of `races` and `season_drivers`, `SeasonsModule` registered in `AppModule`
+- [x] **1.4** Tests: unit `Season` (a round synced twice is updated; `replaceGrid` keeps ids and removes drivers who left), `DriverCode`
+- [x] **1.5** `make test` and `make lint` pass. Commit phase 1.
 
 ## Phase 2: `F1DataProvider` port and Jolpica adapter
 
