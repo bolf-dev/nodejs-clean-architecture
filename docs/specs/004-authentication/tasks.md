@@ -43,18 +43,19 @@ Every command runs through `make`, never on the host.
 
 ## Phase 4: Frontend session, login, registration and my profile
 
-- [ ] **4.1 Session:** `src/auth/session.ts` (token in `localStorage`, `logIn`, `register`, `logOut`, `isLoggedIn`); `api/client.ts` sends the `Authorization` header; `api/auth.ts`, `registerPlayer` and `getMe` in `api/players.ts`
-- [ ] **4.2 Styles:** primary button styles from `NicknameForm` move to `base.css` as `.button-primary`
-- [ ] **4.3 Views:** `LoginView` (`/login`) and `RegisterView` (`/register`, replaces `CreatePlayerView`)
-- [ ] **4.4 Router:** `meta.public`, `beforeEach` guard for logged-out and logged-in players
-- [ ] **4.5 Header:** nickname of the logged-in player linking to `/` and "Log out"
-- [ ] **4.6 My profile:** `PlayerCard` component from `PlayerProfileView`, `MyProfileView` at `/` with email and change nickname through `PATCH /v1/players/me` (`changeMyNickname` replaces `changeNickname`)
-- [ ] **4.7** Verify in the browser: AC17 to AC21
-- [ ] **4.8** `make frontend-lint` passes. Commit phase 4.
+- [x] **4.1 Session:** `src/auth/session.ts` (token in `localStorage`, `logIn`, `register`, `logOut`, `isLoggedIn`); `api/client.ts` sends the `Authorization` header; `api/auth.ts`, `registerPlayer` and `getMe` in `api/players.ts`
+- [x] **4.2 Styles:** primary button styles from `NicknameForm` move to `base.css` as `.button-primary`
+- [x] **4.3 Views:** `LoginView` (`/login`) and `RegisterView` (`/register`, replaces `CreatePlayerView`)
+- [x] **4.4 Router:** `meta.public`, `beforeEach` guard for logged-out and logged-in players
+- [x] **4.5 Header:** nickname of the logged-in player linking to `/` and "Log out"
+- [x] **4.6 My profile:** `PlayerCard` component from `PlayerProfileView`, `MyProfileView` at `/` with email and change nickname through `PATCH /v1/players/me` (`changeMyNickname` replaces `changeNickname`)
+- [x] **4.7** Verify in the browser: AC17 to AC21
+- [x] **4.8** `make frontend-lint` passes. Commit phase 4.
 
 ## Phase 5: Frontend other players' profiles and expired session
 
-- [ ] **5.1** `PlayerProfileView` uses `PlayerCard`, read only, without email
+- [x] **5.1** `PlayerProfileView` uses `PlayerCard`, read only, without email
+  - Done in phase 4: removing `changeNickname(id, …)` from the API client left the old change form without an endpoint
 - [ ] **5.2** `api/client.ts`: `401` outside login forgets the token and opens `/login` with "Your session has expired. Please log in again."
 - [ ] **5.3** Verify in the browser: another player's profile and AC22
 - [ ] **5.4** `make frontend-lint` passes. Commit phase 5.

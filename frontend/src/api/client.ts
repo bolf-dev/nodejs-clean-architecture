@@ -1,3 +1,5 @@
+import { readToken } from '@/auth/token-storage'
+
 export const GENERIC_ERROR = 'Something went wrong. Please try again.'
 
 /** An error response from the API, or status 0 when the API cannot be reached. */
@@ -12,11 +14,20 @@ export class ApiError extends Error {
 }
 
 export async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const headers: Record<string, string> = {}
+  if (body !== undefined) {
+    headers['Content-Type'] = 'application/json'
+  }
+  const token = readToken()
+  if (token !== null) {
+    headers['Authorization'] = `Bearer ${token.accessToken}`
+  }
+
   let response: Response
   try {
     response = await fetch(path, {
       method,
-      headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     })
   } catch {
