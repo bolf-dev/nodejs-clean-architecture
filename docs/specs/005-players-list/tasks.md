@@ -18,9 +18,9 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 2: Players screen
 
-- [ ] **2.1** `listPlayers()` in `api/players.ts`, `PlayersView` at `/players`, "Players" link in the header
-- [ ] **2.2** Verify in the browser: AC3, AC4
-- [ ] **2.3** `make frontend-lint` passes. Commit phase 2.
+- [x] **2.1** `listPlayers()` in `api/players.ts`, `PlayersView` at `/players`, "Players" link in the header
+- [x] **2.2** Verify in the browser: AC3, AC4
+- [x] **2.3** `make frontend-lint` passes. Commit phase 2.
 
 ## Phase 3: README
 

@@ -8,6 +8,12 @@ export interface Player {
   updatedAt: string
 }
 
+/** A player in the list of all players: only id and nickname. */
+export interface PlayerListItem {
+  id: string
+  nickname: string
+}
+
 /** The logged-in player, the only one whose email the API returns. */
 export interface MyPlayer extends Player {
   email: string
@@ -19,6 +25,10 @@ export function registerPlayer(
   password: string,
 ): Promise<{ id: string }> {
   return request<{ id: string }>('POST', '/v1/players', { email, nickname, password })
+}
+
+export async function listPlayers(): Promise<PlayerListItem[]> {
+  return (await request<{ players: PlayerListItem[] }>('GET', '/v1/players')).players
 }
 
 export function getMe(): Promise<MyPlayer> {
