@@ -1,6 +1,6 @@
 # 006 Season sync: tasks
 
-- **Status:** Approved (2026-11-09)
+- **Status:** Done (2026-11-09)
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order. Every phase ends with green checks and a commit on the `006-season-sync` branch, then stops for review.
@@ -50,10 +50,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 6: README
 
-- [ ] **6.1** README: `make sync-season`, the three endpoints, the `seasons` module and the Jolpica adapter. Commit phase 6.
+- [x] **6.1** README: `make sync-season`, the three endpoints, the `seasons` module and the Jolpica adapter. Commit phase 6.
 
 ## Finish
 
-- [ ] **F.1** Check off 006 in the roadmap, set spec, plan and tasks to done
+- [x] **F.1** Check off 006 in the roadmap, set spec, plan and tasks to done
 - [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request
