@@ -43,10 +43,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 5: Frontend
 
-- [ ] **5.1** `api/races.ts`, `utils/team-colors.ts`
-- [ ] **5.2** `DriverCard`, `RacesView` at `/races`, `RaceView` at `/races/:raceId`, "Races" link in the header
-- [ ] **5.3** Verify in the browser after `make sync-season year=2026`: AC10, AC11
-- [ ] **5.4** `make frontend-lint` passes. Commit phase 5.
+- [x] **5.1** `api/races.ts`, `utils/team-colors.ts`
+- [x] **5.2** `DriverCard`, `RacesView` at `/races`, `RaceView` at `/races/:raceId`, "Races" link in the header
+- [x] **5.3** Verify in the browser after `make sync-season year=2026`: AC10, AC11
+- [x] **5.4** `make frontend-lint` passes. Commit phase 5.
 
 ## Phase 6: README
 

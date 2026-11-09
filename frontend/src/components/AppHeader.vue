@@ -18,6 +18,7 @@ async function onLogOut(): Promise<void> {
         F1 Prediction League
       </RouterLink>
       <div v-if="isLoggedIn" class="app-header__session">
+        <RouterLink to="/races" class="app-header__link">Races</RouterLink>
         <RouterLink to="/players" class="app-header__link">Players</RouterLink>
         <RouterLink v-if="me" to="/" class="app-header__player">{{ me.nickname }}</RouterLink>
         <button type="button" class="app-header__logout" @click="onLogOut">Log out</button>
