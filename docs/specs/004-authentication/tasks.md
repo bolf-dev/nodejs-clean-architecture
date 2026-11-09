@@ -24,13 +24,13 @@ Every command runs through `make`, never on the host.
 
 ## Phase 2: Login
 
-- [ ] **2.1 Configuration:** `JWT_SECRET` in `validateEnvironment` (required, at least 32 characters) with a unit test (T1); development value in `compose.yaml`, `.env.example`
-- [ ] **2.2 Errors:** `UnauthorizedError` category, mapped to `401` in `ErrorResponseFilter`
-- [ ] **2.3 Tokens:** install `@nestjs/jwt` (dependency log); `TokenService` port, `JwtTokenService` (7 days, `sub` = player id), `FakeTokenService`; `JwtModule.registerAsync` in `PlayersModule`
-- [ ] **2.4 Query:** `PlayerQueries.findCredentialsByEmail` (SQL and in-memory); `LogInQuery`, `LogInHandler`, `InvalidCredentials`
-- [ ] **2.5 Presentation:** `AuthController` with `POST /v1/auth/login` (`200`), `LogInRequest`
-- [ ] **2.6 Tests:** unit `LogInHandler`; e2e AC9, AC10 in `test/auth.e2e-spec.ts`
-- [ ] **2.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 2.
+- [x] **2.1 Configuration:** `JWT_SECRET` in `validateEnvironment` (required, at least 32 characters) with a unit test (T1); development value in `compose.yaml`, `.env.example`
+- [x] **2.2 Errors:** `UnauthorizedError` category, mapped to `401` in `ErrorResponseFilter`
+- [x] **2.3 Tokens:** install `@nestjs/jwt` (dependency log); `TokenService` port, `JwtTokenService` (7 days, `sub` = player id), `FakeTokenService`; `JwtModule.registerAsync` in `PlayersModule`
+- [x] **2.4 Query:** `PlayerQueries.findCredentialsByEmail` (SQL and in-memory); `LogInQuery`, `LogInHandler`, `InvalidCredentials`
+- [x] **2.5 Presentation:** `AuthController` with `POST /v1/auth/login` (`200`), `LogInRequest`
+- [x] **2.6 Tests:** unit `LogInHandler`; e2e AC9, AC10 in `test/auth.e2e-spec.ts`
+- [x] **2.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 2.
 
 ## Phase 3: Access
 

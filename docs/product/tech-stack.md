@@ -43,5 +43,6 @@ Dependencies added after the initial setup, with the reason.
 | `tsx`                                                                                    | dev     | 002      | TypeScript loader the MikroORM CLI uses for its config  |
 | `class-validator`, `class-transformer`                                                   | runtime | 002      | request DTO validation with the NestJS `ValidationPipe` |
 | `@nestjs/cqrs`                                                                           | runtime | 002      | command and query buses                                 |
+| `@nestjs/jwt`                                                                            | runtime | 004      | signing and verifying the access tokens (JWT)           |
 | frontend: `vue`, `vue-router`                                                            | runtime | 003      | UI framework and routing, from the `create-vue` scaffold |
 | frontend: `vite`, `@vitejs/plugin-vue`, `vite-plugin-vue-devtools`, `typescript`, `vue-tsc`, `@vue/tsconfig`, `@tsconfig/node24`, `@types/node`, `eslint`, `oxlint` and their Vue/TypeScript/Prettier plugins, `prettier`, `jiti`, `npm-run-all2` | dev | 003 | dev server, build, type check, lint and format, from the `create-vue` scaffold |

@@ -5,3 +5,9 @@ export interface PlayerReadModel {
   createdAt: Date;
   updatedAt: Date;
 }
+
+/** What logging in needs to check a password: the player and their stored password hash. */
+export interface PlayerCredentials {
+  playerId: string;
+  passwordHash: string;
+}

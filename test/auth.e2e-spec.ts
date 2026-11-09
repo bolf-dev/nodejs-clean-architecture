@@ -16,6 +16,7 @@ describe('Authentication (e2e)', () => {
   let app: INestApplication<App>;
 
   const register = (body: object) => request(app.getHttpServer()).post('/v1/players').send(body);
+  const logIn = (body: object) => request(app.getHttpServer()).post('/v1/auth/login').send(body);
   const storedCredentials = () =>
     query<CredentialsRow>(app, 'select email, password_hash from players order by created_at');
 
@@ -112,6 +113,41 @@ describe('Authentication (e2e)', () => {
       expect(stored?.password_hash).toMatch(/^scrypt\$/);
       expect(stored?.password_hash).not.toContain('correct-horse');
       expect(JSON.stringify(response.body)).not.toContain('correct-horse');
+    });
+  });
+
+  describe('POST /v1/auth/login', () => {
+    beforeEach(async () => {
+      await register(registration('JohnDoe', { email: 'johndoe@example.com', password: 'correct-horse' })).expect(201);
+    });
+
+    it('AC9 returns an access token valid for 7 days, the email in any letter case', async () => {
+      const requestedAt = Date.now();
+      const response = await logIn({ email: 'JohnDoe@Example.com', password: 'correct-horse' }).expect(200);
+
+      expect(response.body).toEqual({
+        accessToken: expect.stringMatching(/^[\w-]+\.[\w-]+\.[\w-]+$/),
+        expiresAt: expect.any(String),
+      });
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      const expiresAt = new Date(response.body.expiresAt).getTime();
+      expect(expiresAt).toBeGreaterThanOrEqual(requestedAt + sevenDays - 1000);
+      expect(expiresAt).toBeLessThanOrEqual(Date.now() + sevenDays);
+    });
+
+    it.each([
+      ['a wrong password', { email: 'johndoe@example.com', password: 'wrong-horse' }],
+      ['an unknown email', { email: 'janedoe@example.com', password: 'correct-horse' }],
+    ])('AC10 rejects %s with the same error', async (_, body) => {
+      const response = await logIn(body).expect(401);
+
+      expect(response.body).toEqual({ error: 'Invalid email or password' });
+    });
+
+    it('rejects a body without a password', async () => {
+      const response = await logIn({ email: 'johndoe@example.com' }).expect(400);
+
+      expect(response.body).toEqual({ error: 'password must be a string' });
     });
   });
 });
