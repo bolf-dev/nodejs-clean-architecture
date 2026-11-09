@@ -12,25 +12,43 @@ Requirements: Docker with Docker Compose, `make`. Node.js on the host is **not**
 make init   # builds the image, installs dependencies, starts the app with PostgreSQL, applies migrations
 ```
 
-Open the frontend at http://localhost:5173 to create a player, or call the API directly:
+Open the frontend at http://localhost:5173 to register and log in, or call the API directly:
 
 ```shell
+# Register
 curl -i -X POST http://localhost:3000/v1/players \
   -H 'content-type: application/json' \
-  -d '{"nickname": "JohnDoe"}'
+  -d '{"email": "johndoe@example.com", "nickname": "JohnDoe", "password": "correct-horse"}'
+
+# Log in, then send the access token to every other endpoint
+TOKEN=$(curl -s -X POST http://localhost:3000/v1/auth/login \
+  -H 'content-type: application/json' \
+  -d '{"email": "johndoe@example.com", "password": "correct-horse"}' | sed 's/.*"accessToken":"\([^"]*\)".*/\1/')
+curl -i http://localhost:3000/v1/players/me -H "Authorization: Bearer $TOKEN"
 ```
 
 The backend runs in watch mode and the frontend in the Vite dev server, so changes in `src/` and `frontend/src/` are picked up automatically.
 
 ## API
 
-| Method  | Path                       | Description                          | Success                          |
-|---------|----------------------------|--------------------------------------|----------------------------------|
-| `POST`  | `/v1/players`              | Create a player `{ "nickname": … }`  | `201` `{ "id" }`, `Location` header |
-| `GET`   | `/v1/players/{playerId}`   | Player detail                        | `200` `{ "id", "nickname", "createdAt", "updatedAt" }` |
-| `PATCH` | `/v1/players/{playerId}`   | Change the nickname `{ "nickname": … }` | `204`                         |
+| Method  | Path                       | Token | Description                                         | Success                          |
+|---------|----------------------------|-------|-----------------------------------------------------|----------------------------------|
+| `POST`  | `/v1/players`              | no    | Register `{ "email", "nickname", "password" }`      | `201` `{ "id" }`, `Location` header |
+| `POST`  | `/v1/auth/login`           | no    | Log in `{ "email", "password" }`                    | `200` `{ "accessToken", "expiresAt" }` |
+| `GET`   | `/v1/players/me`           | yes   | The logged-in player, with the email                | `200` `{ "id", "email", "nickname", "createdAt", "updatedAt" }` |
+| `PATCH` | `/v1/players/me`           | yes   | Change my nickname `{ "nickname": … }`              | `204`                            |
+| `GET`   | `/v1/players/{playerId}`   | yes   | Another player's profile, without the email         | `200` `{ "id", "nickname", "createdAt", "updatedAt" }` |
 
-Errors have the body `{ "error": "<message>" }`: `400` invalid input, `404` unknown player, `409` nickname taken, `500` unexpected error. The full contract is in the [spec of 002](docs/specs/002-players/spec.md#api-contract).
+Endpoints with a token need the header `Authorization: Bearer <accessToken>`.
+
+Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` missing or invalid token or wrong login, `404` unknown player, `409` email or nickname taken, `500` unexpected error. The full contracts are in the specs of [002](docs/specs/002-players/spec.md#api-contract) and [004](docs/specs/004-authentication/spec.md#api-contract).
+
+## Authentication
+
+- Players register with an email, a nickname and a password. The password is stored only as a salted `scrypt` hash (`node:crypto`).
+- Logging in returns a JWT access token valid for 7 days, signed with `JWT_SECRET`. There are no refresh tokens and no server-side sessions; logging out only forgets the token in the browser.
+- A global guard (`AccessTokenGuard`, registered as `APP_GUARD`) protects every endpoint of every module. Endpoints without a token are marked `@Public()`, and controllers get the logged-in player with `@CurrentPlayerId()`.
+- The guard does not touch infrastructure: it asks `AuthenticateQuery` through the `QueryBus`, like a controller. Logging in is a query too, because it changes no state.
 
 ## Architecture
 
@@ -58,12 +76,13 @@ The project is built with spec-driven development: every feature has a spec, a p
 
 ## Frontend
 
-A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics, with three screens: create player (`/`), player profile with changing the nickname (`/players/{playerId}`) and player not found.
+A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`) and other players' profiles (`/players/{playerId}`).
 
 - **Dev server:** Vite in the `frontend` compose service on http://localhost:5173 with hot reload
 - **API:** calls go to `/v1/…` on the same origin; Vite forwards them to the backend, so no CORS setup is needed
 - **No extra libraries:** `fetch` for HTTP, plain CSS with design tokens in `frontend/src/assets/styles/`
-- **Rules stay in the backend:** the frontend shows the API's error messages and only blocks an empty nickname
+- **Rules stay in the backend:** the frontend shows the API's error messages and only blocks empty fields
+- **Session:** the access token is kept in `localStorage` and sent as a Bearer token; a router guard shows logged-out visitors only login and registration, and a `401` opens the login screen again
 
 ## Commands
 
@@ -97,7 +116,7 @@ A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV gr
 
 Ports and database credentials have defaults in `compose.yaml`. To override them, copy `.env.example` to `.env`.
 
-The app validates its environment variables at startup (`src/config/environment.ts`) and refuses to start when `DATABASE_URL` is missing or invalid.
+The app validates its environment variables at startup (`src/config/environment.ts`) and refuses to start when `DATABASE_URL` is missing or invalid, or `JWT_SECRET` is missing or shorter than 32 characters. `compose.yaml` sets a development-only `JWT_SECRET`.
 
 The database schema is changed only through migrations in `src/database/migrations/`.
 

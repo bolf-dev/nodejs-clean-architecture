@@ -1,6 +1,6 @@
 # 004 Authentication: tasks
 
-- **Status:** Approved (2026-11-06)
+- **Status:** Done (2026-11-09)
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order, one at a time. Every phase creates only what it uses, ends with green checks and a commit on the `004-authentication` branch, then stops for review before the next phase starts.
@@ -62,11 +62,11 @@ Every command runs through `make`, never on the host.
 
 ## Phase 6: README and acceptance check
 
-- [ ] **6.1** Update the README: API table and `Authorization` header, "Authentication" section, `JWT_SECRET`, `curl` examples with login
-- [ ] **6.2** `make lint`, `make frontend-lint`, `make test` and `make test-e2e` pass. Commit phase 6.
+- [x] **6.1** Update the README: API table and `Authorization` header, "Authentication" section, `JWT_SECRET`, `curl` examples with login
+- [x] **6.2** `make lint`, `make frontend-lint`, `make test` and `make test-e2e` pass. Commit phase 6.
 
 ## Finish
 
-- [ ] **F.1** Check off 004 in the roadmap, set spec, plan and tasks to done
+- [x] **F.1** Check off 004 in the roadmap, set spec, plan and tasks to done
 - [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request

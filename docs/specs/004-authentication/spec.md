@@ -1,6 +1,6 @@
 # 004 Authentication
 
-- **Status:** Approved (2026-11-06)
+- **Status:** Done (2026-11-09)
 - **Roadmap:** [004](../../product/roadmap.md#004-authentication)
 
 ## Why

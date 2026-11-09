@@ -37,8 +37,10 @@ A web frontend for the players endpoints of 002, in the style of Formula 1 TV gr
 
 ## 004 Authentication
 
-- [ ] Spec, plan, tasks
-- [ ] Implementation
+Spec: [specs/004-authentication](../specs/004-authentication/spec.md)
+
+- [x] Spec, plan, tasks
+- [x] Implementation
 
 Players register with an email and a password and log in. Endpoints acting on behalf of a player take the player from the access token instead of the URL. Commands, handlers and the domain stay unchanged, mostly the presentation layer changes.
 
