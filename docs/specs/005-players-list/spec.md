@@ -1,6 +1,6 @@
 # 005 Players list
 
-- **Status:** Approved (2026-11-09)
+- **Status:** Done (2026-11-09)
 - **Roadmap:** [005](../../product/roadmap.md#005-players-list)
 
 ## Why

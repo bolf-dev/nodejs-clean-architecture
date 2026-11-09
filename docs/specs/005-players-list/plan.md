@@ -1,6 +1,6 @@
 # 005 Players list: plan
 
-- **Status:** Approved (2026-11-09)
+- **Status:** Done (2026-11-09)
 - **Spec:** [spec.md](spec.md)
 
 | Phase | Result                                   | Spec items     |

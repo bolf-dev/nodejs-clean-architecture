@@ -1,6 +1,6 @@
 # 005 Players list: tasks
 
-- **Status:** Approved (2026-11-09)
+- **Status:** Done (2026-11-09)
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order. Every phase ends with green checks and a commit on the `005-players-list` branch, then stops for review.
@@ -24,10 +24,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 3: README
 
-- [ ] **3.1** README: `GET /v1/players` in the API table, the players screen in the frontend section. Commit phase 3.
+- [x] **3.1** README: `GET /v1/players` in the API table, the players screen in the frontend section. Commit phase 3.
 
 ## Finish
 
-- [ ] **F.1** Check off 005 in the roadmap, set spec, plan and tasks to done
+- [x] **F.1** Check off 005 in the roadmap, set spec, plan and tasks to done
 - [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request

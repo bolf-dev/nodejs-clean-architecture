@@ -54,8 +54,10 @@ Players register with an email and a password and log in. Endpoints acting on be
 
 ## 005 Players list
 
-- [ ] Spec, plan, tasks
-- [ ] Implementation
+Spec: [specs/005-players-list](../specs/005-players-list/spec.md)
+
+- [x] Spec, plan, tasks
+- [x] Implementation
 
 All players of the league, so a player can find others and open their profile.
 
