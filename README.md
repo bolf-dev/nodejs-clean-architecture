@@ -9,7 +9,8 @@ The application is an **F1 Prediction League**: players predict the pole positio
 Requirements: Docker with Docker Compose, `make`. Node.js on the host is **not** needed, every command runs in a container.
 
 ```shell
-make init   # builds the image, installs dependencies, starts the app with PostgreSQL, applies migrations
+make init                    # builds the image, installs dependencies, starts the app with PostgreSQL, applies migrations
+make sync-season year=2026   # loads the calendar and the drivers of the season from the Jolpica F1 API
 ```
 
 Open the frontend at http://localhost:5173 to register and log in, or call the API directly:
@@ -39,10 +40,13 @@ The backend runs in watch mode and the frontend in the Vite dev server, so chang
 | `GET`   | `/v1/players/me`           | yes   | The logged-in player, with the email                | `200` `{ "id", "email", "nickname", "createdAt", "updatedAt" }` |
 | `PATCH` | `/v1/players/me`           | yes   | Change my nickname `{ "nickname": … }`              | `204`                            |
 | `GET`   | `/v1/players/{playerId}`   | yes   | Another player's profile, without the email         | `200` `{ "id", "nickname", "createdAt", "updatedAt" }` |
+| `GET`   | `/v1/races?season=2026`    | yes   | The calendar of a season, ordered by round          | `200` `{ "races": [{ "id", "season", "round", "name", "circuit", "locality", "country", "sprintQualifyingAt", "qualifyingAt", "raceAt" }] }` |
+| `GET`   | `/v1/races/{raceId}`       | yes   | One race                                            | `200` race as in the calendar    |
+| `GET`   | `/v1/drivers?season=2026`  | yes   | The current grid of a season, ordered by code       | `200` `{ "drivers": [{ "id", "code", "number", "firstName", "lastName", "team" }] }` |
 
 Endpoints with a token need the header `Authorization: Bearer <accessToken>`.
 
-Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` missing or invalid token or wrong login, `404` unknown player, `409` email or nickname taken, `500` unexpected error. The full contracts are in the specs of [002](docs/specs/002-players/spec.md#api-contract) and [004](docs/specs/004-authentication/spec.md#api-contract).
+Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` missing or invalid token or wrong login, `404` unknown player or race, `409` email or nickname taken, `500` unexpected error. The full contracts are in the specs of [002](docs/specs/002-players/spec.md#api-contract), [004](docs/specs/004-authentication/spec.md#api-contract) and [006](docs/specs/006-season-sync/spec.md#api-contract).
 
 ## Authentication
 
@@ -50,6 +54,13 @@ Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` miss
 - Logging in returns a JWT access token valid for 7 days, signed with `JWT_SECRET`. There are no refresh tokens and no server-side sessions; logging out only forgets the token in the browser.
 - A global guard (`AccessTokenGuard`, registered as `APP_GUARD`) protects every endpoint of every module. Endpoints without a token are marked `@Public()`, and controllers get the logged-in player with `@CurrentPlayerId()`.
 - The guard does not touch infrastructure: it asks `AuthenticateQuery` through the `QueryBus`, like a controller. Logging in is a query too, because it changes no state.
+
+## Season sync
+
+- `make sync-season year=2026` loads or updates the races (with the session times in UTC) and the current grid of a season. Running it again updates changed times and never duplicates anything. There is no endpoint for it, so no player can start it.
+- `src/sync-season.ts` starts the app without HTTP (`NestFactory.createApplicationContext`) and executes `SyncSeasonCommand` through the `CommandBus`. `make sync-season` runs it in the running `app` container, so it needs `make up`; a production image runs `node dist/sync-season.js 2026` the same way.
+- The data comes through the `F1DataProvider` port, implemented by `JolpicaF1DataProvider` for the public [Jolpica F1 API](https://api.jolpi.ca/ergast/f1/) with the built-in `fetch`. Everything is fetched before anything changes and saved in one transaction, so an unreachable API or an unreadable response changes nothing.
+- The current grid is the starters of the latest race with results, with their teams; before the first race, the season's drivers with a code and a number.
 
 ## Architecture
 
@@ -61,6 +72,8 @@ The code follows the rules in the [constitution](docs/constitution.md). Each bou
 | `application`    | Commands, queries and their handlers (use cases), read models, ports  | `domain`, NestJS DI and `@nestjs/cqrs`      |
 | `infrastructure` | Adapters of the ports: MikroORM repository, SQL queries, in-memory    | `application`, `domain`, any library        |
 | `presentation`   | HTTP controllers, request and response DTOs                           | `application`, NestJS                       |
+
+The modules are `players` (registration, login, profiles) and `seasons` (races and drivers synced from the Jolpica F1 API). They do not import each other.
 
 Writes and reads take different paths (CQRS, as in the [NestJS CQRS recipe](https://docs.nestjs.com/recipes/cqrs)):
 
@@ -77,7 +90,7 @@ The project is built with spec-driven development: every feature has a spec, a p
 
 ## Frontend
 
-A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`), the list of all players (`/players`) and other players' profiles (`/players/{playerId}`).
+A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`), the list of all players (`/players`), other players' profiles (`/players/{playerId}`), the calendar of the current season (`/races`) and the race detail with driver cards in team colors (`/races/{raceId}`).
 
 - **Dev server:** Vite in the `frontend` compose service on http://localhost:5173 with hot reload
 - **API:** calls go to `/v1/…` on the same origin; Vite forwards them to the backend, so no CORS setup is needed
@@ -97,6 +110,7 @@ A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV gr
 | `make migration`              | Create a migration from the mapping changes         |
 | `make migrate`                | Apply pending migrations                            |
 | `make migrate-down`           | Revert the last migration                           |
+| `make sync-season year=2026`  | Load or update a season from the Jolpica F1 API     |
 | `make test`                   | Run unit tests                                      |
 | `make test-e2e`               | Run e2e tests against the test database             |
 | `make lint`                   | Lint the code                                       |
@@ -111,6 +125,7 @@ A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV gr
 ## Tests
 
 - **Unit tests** (`make test`): `*.spec.ts` files next to the code. They test the domain and the handlers without NestJS and without a database, using in-memory adapters of the ports.
+- **External API:** no test calls the Jolpica F1 API. The adapter is tested against responses recorded once in `test/fixtures/jolpica/`, everything else uses a fake `F1DataProvider`.
 - **E2E tests** (`make test-e2e`): `*.e2e-spec.ts` files in `test/`. They start the whole app and send real HTTP requests. They run against a separate database `<DB_NAME>_test` in the same PostgreSQL container, which `make test-e2e` creates and migrates when needed. Every test starts with empty tables, the development database is never touched.
 
 ## Configuration

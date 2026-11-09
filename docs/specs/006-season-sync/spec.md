@@ -1,6 +1,6 @@
 # 006 Season sync
 
-- **Status:** Approved (2026-11-09)
+- **Status:** Done (2026-11-09)
 - **Roadmap:** [006](../../product/roadmap.md#006-season-sync)
 
 ## Why

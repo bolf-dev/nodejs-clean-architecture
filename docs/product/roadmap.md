@@ -69,7 +69,7 @@ All players of the league, so a player can find others and open their profile.
 Spec: [specs/006-season-sync](../specs/006-season-sync/spec.md)
 
 - [x] Spec, plan, tasks
-- [ ] Implementation
+- [x] Implementation
 
 Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProvider` port.
 
