@@ -66,18 +66,19 @@ All players of the league, so a player can find others and open their profile.
 
 ## 006 Season sync
 
-- [ ] Spec, plan, tasks
+Spec: [specs/006-season-sync](../specs/006-season-sync/spec.md)
+
+- [x] Spec, plan, tasks
 - [ ] Implementation
 
 Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProvider` port.
 
-- `POST /v1/seasons/{year}/sync`: load or update races and drivers of a season. Running it again updates changed session times.
+- `make sync-season year=2026`: load or update races and drivers of a season. Running it again updates changed session times.
 - `GET /v1/races?season=2026`: calendar
 - `GET /v1/races/{raceId}`: race detail
-- `GET /v1/drivers?season=2026`: drivers eligible in the season, with their team and team color for the driver cards
-- Data: `races` (season, round, name, circuit, country, session times, status `SCHEDULED` / `FINISHED` / `CANCELLED`), `drivers` (external id, code, number, name, team), `season_drivers`
-- Jolpica: `/{season}.json` (calendar with `Qualifying` and `SprintQualifying` times), `/{season}/drivers.json` (drivers). The source of teams and team colors is decided in the spec.
-- Frontend: calendar of the season with the race detail
+- `GET /v1/drivers?season=2026`: the current grid of the season, with the team of each driver
+- Jolpica: `/{season}.json` (calendar with `Qualifying` and `SprintQualifying` times), `/{season}/last/results.json` (the grid with teams), `/{season}/drivers.json` (drivers before the first race)
+- Frontend: calendar of the season, race detail with driver cards in team colors (a color table in the frontend)
 
 ## 007 Predictions
 

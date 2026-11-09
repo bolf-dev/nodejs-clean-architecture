@@ -24,7 +24,7 @@ The game is easy to understand, but it has real business rules (deadlines, valid
 - Private leagues and invitations
 - Sprint race predictions, constructors, fastest lap
 - Driver photos. Drivers are shown as cards with number, code, name and team color.
-- Automatic scheduled synchronization. Data is loaded through endpoints.
+- Automatic scheduled synchronization. Data is loaded with `make` commands.
 
 Some of these are listed as ideas for later in the [roadmap](roadmap.md).
 
