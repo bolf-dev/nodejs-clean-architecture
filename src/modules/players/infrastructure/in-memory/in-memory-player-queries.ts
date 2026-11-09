@@ -13,7 +13,8 @@ export class InMemoryPlayerQueries implements PlayerQueries {
   async listAll(): Promise<PlayerListItem[]> {
     return this.players
       .map(({ id, nickname }) => ({ id, nickname }))
-      .sort((a, b) => a.nickname.toLowerCase().localeCompare(b.nickname.toLowerCase()));
+      // Same order as the SQL adapter: lower(nickname), then id
+      .sort((a, b) => a.nickname.toLowerCase().localeCompare(b.nickname.toLowerCase()) || a.id.localeCompare(b.id));
   }
 
   async findCredentialsByEmail(email: string): Promise<PlayerCredentials | null> {
