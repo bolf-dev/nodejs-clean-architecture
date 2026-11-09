@@ -2,7 +2,7 @@
 import { computed, ref, useId } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiError, GENERIC_ERROR } from '@/api/client'
-import { logIn } from '@/auth/session'
+import { logIn, sessionExpired } from '@/auth/session'
 
 const router = useRouter()
 
@@ -40,6 +40,9 @@ async function onSubmit(): Promise<void> {
   <section class="auth-screen">
     <div class="auth-screen__flag checkered" aria-hidden="true"></div>
     <h1 class="auth-screen__title">Log in</h1>
+    <p v-if="sessionExpired" class="auth-screen__expired" role="status">
+      Your session has expired. Please log in again.
+    </p>
     <form
       class="panel auth-screen__form"
       novalidate
@@ -84,6 +87,10 @@ async function onSubmit(): Promise<void> {
   font-style: italic;
   line-height: var(--line-height-heading);
   text-transform: uppercase;
+}
+
+.auth-screen__expired {
+  font-weight: var(--font-weight-semibold);
 }
 
 .auth-screen__form {

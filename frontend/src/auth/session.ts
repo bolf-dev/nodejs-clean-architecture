@@ -6,6 +6,7 @@ import { clearToken, readToken, saveToken } from './token-storage'
 // Module state shared by every component that imports it, so no store library is needed
 const token = ref(readToken())
 const currentPlayer = ref<MyPlayer | null>(null)
+const expired = ref(false)
 
 /** Whether a player is logged in. The token stays until it expires or the player logs out. */
 export const isLoggedIn = computed(() => token.value !== null)
@@ -13,10 +14,14 @@ export const isLoggedIn = computed(() => token.value !== null)
 /** The logged-in player, loaded with `refreshCurrentPlayer()`. */
 export const me = computed(() => currentPlayer.value)
 
+/** Whether the last session ended because the API rejected the token, shown on the login screen. */
+export const sessionExpired = computed(() => expired.value)
+
 export async function logIn(email: string, password: string): Promise<void> {
   const issued = await requestToken(email, password)
   saveToken(issued)
   token.value = issued
+  expired.value = false
   await refreshCurrentPlayer()
 }
 
@@ -31,6 +36,12 @@ export function logOut(): void {
   clearToken()
   token.value = null
   currentPlayer.value = null
+}
+
+/** Logs out because the API rejected the token, e.g. after it expired (AC22). */
+export function expireSession(): void {
+  logOut()
+  expired.value = true
 }
 
 export async function refreshCurrentPlayer(): Promise<void> {

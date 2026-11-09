@@ -56,9 +56,9 @@ Every command runs through `make`, never on the host.
 
 - [x] **5.1** `PlayerProfileView` uses `PlayerCard`, read only, without email
   - Done in phase 4: removing `changeNickname(id, …)` from the API client left the old change form without an endpoint
-- [ ] **5.2** `api/client.ts`: `401` outside login forgets the token and opens `/login` with "Your session has expired. Please log in again."
-- [ ] **5.3** Verify in the browser: another player's profile and AC22
-- [ ] **5.4** `make frontend-lint` passes. Commit phase 5.
+- [x] **5.2** `api/client.ts`: `401` outside login forgets the token and opens `/login` with "Your session has expired. Please log in again."
+- [x] **5.3** Verify in the browser: another player's profile and AC22
+- [x] **5.4** `make frontend-lint` passes. Commit phase 5.
 
 ## Phase 6: README and acceptance check
 

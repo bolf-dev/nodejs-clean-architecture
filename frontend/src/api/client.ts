@@ -13,6 +13,13 @@ export class ApiError extends Error {
   }
 }
 
+let unauthorizedHandler: () => void = () => {}
+
+/** Called when the API rejects the stored token, e.g. because it expired. Set once in main.ts. */
+export function onUnauthorized(handler: () => void): void {
+  unauthorizedHandler = handler
+}
+
 export async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   const headers: Record<string, string> = {}
   if (body !== undefined) {
@@ -32,6 +39,11 @@ export async function request<T>(method: string, path: string, body?: unknown): 
     })
   } catch {
     throw new ApiError(0, GENERIC_ERROR)
+  }
+
+  // A 401 with a token means the session is over. Login sends no token, so its 401 is a wrong password.
+  if (response.status === 401 && token !== null) {
+    unauthorizedHandler()
   }
 
   if (!response.ok) {
