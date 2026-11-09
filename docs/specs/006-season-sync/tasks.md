@@ -35,11 +35,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 4: Read API
 
-- [ ] **4.1** Read models, `SeasonQueries` port, `SqlSeasonQueries`, in-memory adapter
-- [ ] **4.2** `ListRacesQuery`, `GetRaceQuery` with `RaceNotFound`, `ListDriversQuery` and their handlers
-- [ ] **4.3** Controller with `GET /v1/races`, `GET /v1/races/:raceId`, `GET /v1/drivers`, the `season` request DTO, response classes
-- [ ] **4.4** Tests: unit `GetRaceHandler` (not found); e2e AC7, AC8, AC9
-- [ ] **4.5** `make test`, `make test-e2e` and `make lint` pass. Commit phase 4.
+- [x] **4.1** Read models, `SeasonQueries` port, `SqlSeasonQueries`, in-memory adapter
+- [x] **4.2** `ListRacesQuery`, `GetRaceQuery` with `RaceNotFound`, `ListDriversQuery` and their handlers
+- [x] **4.3** Controller with `GET /v1/races`, `GET /v1/races/:raceId`, `GET /v1/drivers`, the `season` request DTO, response classes
+- [x] **4.4** Tests: unit `GetRaceHandler` (not found); e2e AC7, AC8, AC9
+- [x] **4.5** `make test`, `make test-e2e` and `make lint` pass. Commit phase 4.
 
 ## Phase 5: Frontend
 
