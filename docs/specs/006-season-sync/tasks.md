@@ -19,11 +19,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 2: `F1DataProvider` port and Jolpica adapter
 
-- [ ] **2.1** `F1DataProvider` port and `F1DataUnavailable`
-- [ ] **2.2** Record the Jolpica responses into `test/fixtures/jolpica/` with `curl`: the 2026 calendar, the latest results, the season's drivers
-- [ ] **2.3** `JolpicaF1DataProvider` with `fetch`, `FakeF1DataProvider`
-- [ ] **2.4** Tests: unit `JolpicaF1DataProvider` against the fixtures (AC1, AC3) and a failing `fetch`
-- [ ] **2.5** `make test` and `make lint` pass. Commit phase 2.
+- [x] **2.1** `F1DataProvider` port and `F1DataUnavailable`
+- [x] **2.2** Record the Jolpica responses into `test/fixtures/jolpica/` with `curl`: the 2026 calendar, the latest results, the season's drivers
+- [x] **2.3** `JolpicaF1DataProvider` with `fetch`, `FakeF1DataProvider`
+- [x] **2.4** Tests: unit `JolpicaF1DataProvider` against the fixtures (AC1, AC3) and a failing `fetch`
+- [x] **2.5** `make test` and `make lint` pass. Commit phase 2.
 
 ## Phase 3: Sync command and `make sync-season`
 
