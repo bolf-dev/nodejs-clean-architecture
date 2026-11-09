@@ -27,11 +27,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 3: Sync command and `make sync-season`
 
-- [ ] **3.1** `SyncSeasonCommand`, `SyncSeasonHandler`
-- [ ] **3.2** `src/sync-season.ts`, `make sync-season year=…`
-- [ ] **3.3** Tests: unit `SyncSeasonHandler`: AC2, AC4, AC5, AC6
-- [ ] **3.4** Manual check: `make sync-season year=2026` prints the summary; a second run updates and creates nothing
-- [ ] **3.5** `make test` and `make lint` pass. Commit phase 3.
+- [x] **3.1** `SyncSeasonCommand`, `SyncSeasonHandler`
+- [x] **3.2** `src/sync-season.ts`, `make sync-season year=…`
+- [x] **3.3** Tests: unit `SyncSeasonHandler`: AC2, AC4, AC5, AC6
+- [x] **3.4** Manual check: `make sync-season year=2026` prints the summary; a second run updates and creates nothing
+- [x] **3.5** `make test` and `make lint` pass. Commit phase 3.
 
 ## Phase 4: Read API
 
