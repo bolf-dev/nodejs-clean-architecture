@@ -55,5 +55,6 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 ## Finish
 
 - [x] **F.1** Check off 006 in the roadmap, set spec, plan and tasks to done
-- [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
+- [x] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
+  - Fixed: `DriverCode` rejects an invalid code, the AC6 test keeps only the check that can fail, a failing start of `sync-season` gets the clear message.
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request
