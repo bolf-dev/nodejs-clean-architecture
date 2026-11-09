@@ -10,6 +10,7 @@ import { PlayerQueries } from './application/ports/player-queries.port.js';
 import { TokenService } from './application/ports/token-service.port.js';
 import { AuthenticateHandler } from './application/queries/authenticate/authenticate.handler.js';
 import { GetPlayerHandler } from './application/queries/get-player/get-player.handler.js';
+import { ListPlayersHandler } from './application/queries/list-players/list-players.handler.js';
 import { LogInHandler } from './application/queries/log-in/log-in.handler.js';
 import { PlayerRepository } from './domain/player.repository.port.js';
 import { MikroOrmPlayerRepository } from './infrastructure/persistence/mikro-orm-player.repository.js';
@@ -34,6 +35,7 @@ import { PlayersController } from './presentation/http/players.controller.js';
     RegisterPlayerHandler,
     ChangeNicknameHandler,
     GetPlayerHandler,
+    ListPlayersHandler,
     LogInHandler,
     AuthenticateHandler,
     // Every endpoint of every module needs an access token, unless it is @Public()

@@ -1,5 +1,5 @@
 import { PlayerQueries } from '../../application/ports/player-queries.port.js';
-import type { PlayerCredentials, PlayerReadModel } from '../../application/player.read-model.js';
+import type { PlayerCredentials, PlayerListItem, PlayerReadModel } from '../../application/player.read-model.js';
 
 /** PlayerQueries adapter keeping read models in memory, used by unit tests instead of the database. */
 export class InMemoryPlayerQueries implements PlayerQueries {
@@ -8,6 +8,12 @@ export class InMemoryPlayerQueries implements PlayerQueries {
 
   async findById(id: string): Promise<PlayerReadModel | null> {
     return this.players.find((player) => player.id === id) ?? null;
+  }
+
+  async listAll(): Promise<PlayerListItem[]> {
+    return this.players
+      .map(({ id, nickname }) => ({ id, nickname }))
+      .sort((a, b) => a.nickname.toLowerCase().localeCompare(b.nickname.toLowerCase()));
   }
 
   async findCredentialsByEmail(email: string): Promise<PlayerCredentials | null> {

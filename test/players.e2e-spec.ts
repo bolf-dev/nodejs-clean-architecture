@@ -107,6 +107,27 @@ describe('Players (e2e)', () => {
     });
   });
 
+  describe('GET /v1/players (005)', () => {
+    it('AC1 lists every player with id and nickname, ordered by nickname ignoring letter case', async () => {
+      const { authorization } = await registerAndLogIn(app, 'johndoe');
+      await registerAndLogIn(app, 'Ferrari_Fan');
+      await registerAndLogIn(app, 'Alonso_Fan');
+
+      const response = await request(app.getHttpServer()).get('/v1/players').set('Authorization', authorization).expect(200);
+
+      expect(response.body.players.map(({ nickname }: { nickname: string }) => nickname)).toEqual([
+        'Alonso_Fan',
+        'Ferrari_Fan',
+        'johndoe',
+      ]);
+      expect(Object.keys(response.body.players[0]).sort()).toEqual(['id', 'nickname']);
+    });
+
+    it('AC2 needs a token', async () => {
+      await request(app.getHttpServer()).get('/v1/players').expect(401);
+    });
+  });
+
   describe('GET /v1/players/{playerId}', () => {
     it('AC8 returns the player', async () => {
       const { id, authorization } = await registerAndLogIn(app, 'JohnDoe');

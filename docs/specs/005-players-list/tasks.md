@@ -11,10 +11,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 1: `GET /v1/players`
 
-- [ ] **1.1** `PlayerListItem` read model, `PlayerQueries.listAll()` in `SqlPlayerQueries` and `InMemoryPlayerQueries`
-- [ ] **1.2** `ListPlayersQuery`, `ListPlayersHandler`, `PlayersListResponse`, `PlayersController.list`
-- [ ] **1.3** Tests: unit `ListPlayersHandler`; e2e AC1, AC2
-- [ ] **1.4** `make test`, `make test-e2e` and `make lint` pass. Commit phase 1.
+- [x] **1.1** `PlayerListItem` read model, `PlayerQueries.listAll()` in `SqlPlayerQueries` and `InMemoryPlayerQueries`
+- [x] **1.2** `ListPlayersQuery`, `ListPlayersHandler`, `PlayersListResponse`, `PlayersController.list`
+- [x] **1.3** Tests: unit `ListPlayersHandler`; e2e AC1, AC2
+- [x] **1.4** `make test`, `make test-e2e` and `make lint` pass. Commit phase 1.
 
 ## Phase 2: Players screen
 
