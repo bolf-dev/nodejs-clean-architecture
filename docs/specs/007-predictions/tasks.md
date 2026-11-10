@@ -37,10 +37,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 4: Frontend, prediction on the race
 
-- [ ] **4.1** `api/predictions.ts` with `submitMyPrediction` and `getMyPrediction`
-- [ ] **4.2** `PredictionForm`, badge on `DriverCard`, `RaceView` loads and saves the prediction
-- [ ] **4.3** Verify in the browser: AC9
-- [ ] **4.4** `make frontend-lint` passes. Commit phase 4.
+- [x] **4.1** `api/predictions.ts` with `submitMyPrediction` and `getMyPrediction`
+- [x] **4.2** `PredictionForm`, badge on `DriverCard`, `RaceView` loads and saves the prediction
+- [x] **4.3** Verify in the browser: AC9
+- [x] **4.4** `make frontend-lint` passes. Commit phase 4.
 
 ## Phase 5: Frontend, predictions on the profiles
 
