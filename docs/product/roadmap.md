@@ -89,11 +89,11 @@ Spec: [specs/007-predictions](../specs/007-predictions/spec.md)
 
 Submitting predictions with the validation rules. Without a deadline yet: a prediction can be changed until the race result is imported.
 
-- `PUT /v1/races/{raceId}/predictions/me`: submit or replace the logged-in player's prediction `{ "pole": "NOR", "p1": "VER", "p2": "NOR", "p3": "LEC" }`
+- `PUT /v1/races/{raceId}/predictions/me`: submit or replace the logged-in player's prediction `{ "qualifying": { "p1": "NOR", "p2": "VER", "p3": "LEC" }, "race": { "p1": "VER", "p2": "NOR", "p3": "LEC" } }`
 - `GET /v1/races/{raceId}/predictions/me`: the logged-in player's prediction
 - `GET /v1/players/{playerId}/predictions`: a player's predictions in a season; other players' predictions only for finished races
-- Data: `predictions` (player, race, pole, P1, P2, P3, submitted and updated time)
-- Frontend: a grid of driver cards (number, code, name, team color) to pick the pole and the podium P1, P2, P3; my predictions, and the predictions of other players on their profiles
+- Data: `predictions` (player, race, qualifying P1 to P3, race P1 to P3, submitted and updated time)
+- Frontend: a grid of driver cards (number, code, name, team color) to fill a qualifying podium and a race podium; my predictions, and the predictions of other players on their profiles
 
 ## 008 Results and scoring
 
@@ -103,11 +103,11 @@ Submitting predictions with the validation rules. Without a deadline yet: a pred
 Importing official results and scoring all predictions of a race.
 
 - `POST /v1/races/{raceId}/results/import`: import the result, mark the race `FINISHED`, score its predictions (domain event `RaceFinished`). Running it again recalculates all scores of the race.
-- Scoring: 5 points for the pole, 10 for every podium driver in the exact position, at most 35
+- Scoring: 5 points for every qualifying driver in the exact position (P1 is the pole), 10 for every race podium driver in the exact position, at most 45
 - `GET /v1/races/{raceId}/predictions`: all predictions of a race with their scores, only for a finished race
 - Prediction responses include the score and its breakdown
-- Data: `race_results` (pole, P1, P2, P3, imported time), `prediction_scores` (points, breakdown, calculated time)
-- Jolpica: `/{season}/{round}/qualifying.json` (pole), `/{season}/{round}/results.json` (podium)
+- Data: `race_results` (qualifying P1 to P3, race P1 to P3, imported time), `prediction_scores` (points, breakdown, calculated time)
+- Jolpica: `/{season}/{round}/qualifying.json` (top 3 of qualifying), `/{season}/{round}/results.json` (podium)
 - Frontend: race result with all predictions and their points, points on the player's predictions; the top 3 of finished races in the calendar
 
 ## 009 Leaderboard

@@ -2,7 +2,7 @@
 
 ## Pitch
 
-**F1 Prediction League** is a web app for a Formula 1 prediction game: a NestJS API with a Vue frontend. Before every Grand Prix, players predict the pole position and the podium. After the race the official results are imported, every prediction is scored and the season standings are updated.
+**F1 Prediction League** is a web app for a Formula 1 prediction game: a NestJS API with a Vue frontend. Before every Grand Prix, players predict the top 3 of qualifying and the podium of the race. After the race the official results are imported, every prediction is scored and the season standings are updated.
 
 ## Why this project exists
 
@@ -33,7 +33,7 @@ Some of these are listed as ideas for later in the [roadmap](roadmap.md).
 ### Race weekend
 
 1. The season calendar and drivers are loaded from the official F1 data source.
-2. Until the **deadline**, every player can submit a prediction for the race: pole position, P1, P2 and P3, picked from a grid of the season's drivers. Submitting again replaces the previous prediction.
+2. Until the **deadline**, every player can submit a prediction for the race: the top 3 of qualifying (P1 is the pole position) and the podium of the race, picked from a grid of the season's drivers. Submitting again replaces the previous prediction.
 3. The deadline is the start of the first competitive session of the weekend: sprint qualifying on sprint weekends, qualifying on the others. It always follows the current schedule.
 4. Before the deadline a player sees only their own prediction. After the deadline all predictions for the race are public.
 5. After the race the official results are imported and all predictions are scored.
@@ -44,20 +44,20 @@ The deadline is the last game feature, roadmap item [010](roadmap.md#010-deadlin
 
 ### Prediction
 
-- Pole position and three podium positions, all four are required
-- P1, P2 and P3 are three different drivers. The pole driver may be any of them.
+- The top 3 of qualifying (P1, which is the pole position, P2, P3) and the podium of the race (P1, P2, P3), all six are required
+- The three qualifying drivers are different, and the three race drivers are different. A driver may be in both.
 - Only drivers eligible in the race's season can be chosen
 
 ### Scoring
 
 | Rule                                             | Points |
 |--------------------------------------------------|--------|
-| Pole position correct                            | 5      |
-| Podium driver in the exact position (per driver) | 10     |
+| Qualifying driver in the exact position (per driver, P1 is the pole) | 5      |
+| Race podium driver in the exact position (per driver)                 | 10     |
 
-A podium driver in a different position earns nothing. Maximum for one race: 5 + 3 × 10 = **35 points**.
+A driver in a different position earns nothing. Maximum for one race: 3 × 5 + 3 × 10 = **45 points**.
 
-Example: the result is VER, NOR, LEC with pole NOR, and the prediction is VER, LEC, NOR with pole NOR. The score is 5 (pole) + 10 (VER exact) = **15 points**.
+Example: qualifying ends NOR, VER, LEC and the race VER, NOR, LEC. The prediction is NOR, LEC, VER for qualifying and VER, LEC, NOR for the race. The score is 5 (NOR on pole) + 10 (VER wins) = **15 points**.
 
 ### Standings
 
@@ -72,7 +72,7 @@ Example: the result is VER, NOR, LEC with pole NOR, and the prediction is VER, L
 | Season      | One F1 year, e.g. 2026                                                     |
 | Race        | One Grand Prix weekend, identified by season and round                     |
 | Deadline    | The moment predictions for a race are locked                               |
-| Prediction  | One player's guess for one race: pole position, P1, P2 and P3              |
-| Race result | The official qualifying and race result: pole position and podium          |
+| Prediction  | One player's guess for one race: the top 3 of qualifying and the podium    |
+| Race result | The official result: the top 3 of qualifying and the podium of the race    |
 | Score       | Points a prediction earned, with a breakdown of what they were awarded for |
 | Standings   | Season ranking of players by their total score                             |

@@ -1,6 +1,6 @@
 # 007 Predictions: plan
 
-- **Status:** Approved (2026-11-10)
+- **Status:** Approved (2026-11-10), phase 6 added 2026-11-10 for the amended spec (the top 3 of qualifying).
 - **Spec:** [spec.md](spec.md)
 
 | Phase | Result                                                       | Spec items              |
@@ -10,7 +10,8 @@
 | 3     | A player's predictions: `GET /v1/players/{playerId}/predictions` | R7, R8, AC7, AC8    |
 | 4     | Frontend: prediction on the race                              | AC9                     |
 | 5     | Frontend: predictions on the profiles                         | AC10                    |
-| 6     | README                                                        |                         |
+| 6     | The top 3 of qualifying and the podium design (spec amendment) | R1, R2, AC1–AC10       |
+| 7     | README                                                        |                         |
 
 ## New module `predictions`
 
@@ -36,8 +37,8 @@ The adapters of `RaceCatalog` and `PlayerDirectory` execute the other modules' q
 
 **`Prediction` is the aggregate**: one player's prediction for one race. It references the player and the race by id only (constitution 6).
 
-- `PredictionPicks.create({ pole, p1, p2, p3 }, { season, driverCodes })`: value object of the four codes
-  - P1, P2 and P3 are different, otherwise `PodiumDriversNotDifferent` (R2)
+- `PredictionPicks.create({ qualifying: { p1, p2, p3 }, race: { p1, p2, p3 } }, { season, driverCodes })`: value object of the six codes (since phase 6; phases 1 to 5 had pole, P1, P2, P3)
+  - the three drivers of each podium are different, otherwise `PodiumDriversNotDifferent` naming qualifying or race (R2)
   - every code is one of the season's driver codes, otherwise `DriverNotInSeason` (R3)
   - both errors are `ValidationError`, so `400`
 - `Prediction.submit({ id, playerId, raceId, picks, now })`: `submittedAt` and `updatedAt` are `now`
@@ -49,11 +50,11 @@ The handler passes in `new Date()` and `randomUUID()`, as in 002. The `Clock` po
 
 ## Database
 
-One migration:
+Phase 1 creates the table, phase 6 replaces the four pick columns with six:
 
 | Table         | Columns | Constraints |
 |---------------|---------|-------------|
-| `predictions` | `id` uuid, `player_id` uuid, `race_id` uuid, `pole` varchar(3), `p1` varchar(3), `p2` varchar(3), `p3` varchar(3), `submitted_at` timestamptz, `updated_at` timestamptz | unique `(player_id, race_id)` (R4) |
+| `predictions` | `id` uuid, `player_id` uuid, `race_id` uuid, `qualifying_p1`, `qualifying_p2`, `qualifying_p3`, `race_p1`, `race_p2`, `race_p3` varchar(3), `submitted_at` timestamptz, `updated_at` timestamptz | unique `(player_id, race_id)` (R4) |
 
 There are no foreign keys to `players` and `races`, because those tables belong to other modules. The ids are checked through their queries.
 
@@ -110,7 +111,24 @@ There are no foreign keys to `players` and `races`, because those tables belong 
 
 **Done when:** AC10 works in the browser.
 
-## Phase 6: README
+## Phase 6: The top 3 of qualifying and the podium design
+
+The spec was amended after phase 5: a prediction has the top 3 of qualifying instead of only the pole position, and the race screen shows two podiums.
+
+- Domain: `PredictionPicks` with `qualifying` and `race`, each `{ p1, p2, p3 }`; `PodiumDriversNotDifferent` with the message of the spec for qualifying or race
+- Database: a second migration deletes the predictions saved so far (development data only, 007 is not released) and replaces `pole`, `p1`, `p2`, `p3` with `qualifying_p1` to `qualifying_p3` and `race_p1` to `race_p3`; record and mapper follow
+- Application and API: the command, the read models and the responses use `qualifying` and `race`
+- `SubmitPredictionRequest`: `qualifying` and `race` are nested `PodiumRequest` objects (`@IsObject()`, `@ValidateNested()`, `@Type()` of `class-transformer`, which the validation pipe already uses)
+- `RequestValidationPipe` reports the first broken constraint of a nested object with its path, e.g. `race.p1 must be a string`; today it only reads the top level and would answer `Invalid request`
+- Frontend:
+  - `PredictionForm` with two podiums, "Qualifying" (P2, POLE, P3) and "Race" (P2, P1, P3), the middle step highest
+  - the moving rule per podium; the badges `POLE`, `QUALI P2`, `QUALI P3`, `RACE P1`, `RACE P2`, `RACE P3`
+  - `PredictionsList` rows with both podiums
+- Tests: the existing tests follow the new shape; `PredictionPicks` and e2e AC3 for a repeated driver in qualifying and in the race, and a driver in both podiums accepted
+
+**Done when:** AC9 and AC10 work in the browser again.
+
+## Phase 7: README
 
 - The three endpoints in the API table, the `predictions` module and how it uses the other modules in the architecture section, the prediction screens in the frontend section
 

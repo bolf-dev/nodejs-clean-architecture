@@ -1,6 +1,6 @@
 # 007 Predictions: tasks
 
-- **Status:** Approved (2026-11-10)
+- **Status:** Approved (2026-11-10), phase 6 added 2026-11-10.
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order. Every phase ends with green checks and a commit on the `007-predictions` branch, then stops for review.
@@ -48,9 +48,21 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 - [x] **5.2** Verify in the browser: AC10
 - [x] **5.3** `make frontend-lint` passes. Commit phase 5.
 
-## Phase 6: README
+## Phase 6: The top 3 of qualifying and the podium design
 
-- [ ] **6.1** README: the three endpoints, the `predictions` module, the prediction screens. Commit phase 6.
+- [x] **6.1** Commit the amended spec, plan and tasks with the mission and roadmap changes
+- [ ] **6.2** Domain: `PredictionPicks` with `qualifying` and `race`, `PodiumDriversNotDifferent` per podium
+- [ ] **6.3** Migration replacing the pick columns, `PredictionRecord`, `PredictionMapper`, SQL queries
+- [ ] **6.4** Command, read models, `SubmitPredictionRequest` with nested podiums, responses; nested messages in `RequestValidationPipe`
+- [ ] **6.5** Tests follow the new shape: unit `PredictionPicks` (R2 per podium), handlers; e2e AC1 to AC8
+- [ ] **6.6** `make test`, `make test-e2e` and `make lint` pass. Commit the backend.
+- [ ] **6.7** Frontend: `api/predictions.ts`, `PredictionForm` with two podiums, `PredictionsList` rows
+- [ ] **6.8** Verify in the browser: AC9, AC10
+- [ ] **6.9** `make frontend-lint` passes. Commit the frontend.
+
+## Phase 7: README
+
+- [ ] **7.1** README: the three endpoints, the `predictions` module, the prediction screens. Commit phase 7.
 
 ## Finish
 
