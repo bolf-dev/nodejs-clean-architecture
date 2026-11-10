@@ -19,13 +19,13 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 2: Submit and read my prediction
 
-- [ ] **2.1** `RaceCatalog` port with `seasonOf` and `driverCodes`, `QueryBusRaceCatalog`, `FakeRaceCatalog`
-- [ ] **2.2** `SubmitPredictionCommand` and its handler
-- [ ] **2.3** `PredictionQueries` port with `findMine`, `SqlPredictionQueries`, in-memory adapter, `GetMyPredictionQuery` and its handler
-- [ ] **2.4** `RacePredictionsController` with `PUT me` and `GET me`, `SubmitPredictionRequest`, `PredictionResponse`
-- [ ] **2.5** Season sync of the e2e tests moved to `test/support/season.ts`, used by `test/seasons.e2e-spec.ts`
-- [ ] **2.6** Tests: unit `SubmitPredictionHandler`; e2e AC1 to AC6
-- [ ] **2.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 2.
+- [x] **2.1** `RaceCatalog` port with `seasonOf` and `driverCodes`, `QueryBusRaceCatalog`, `FakeRaceCatalog`
+- [x] **2.2** `SubmitPredictionCommand` and its handler
+- [x] **2.3** `PredictionQueries` port with `findMine`, `SqlPredictionQueries`, in-memory adapter, `GetMyPredictionQuery` and its handler
+- [x] **2.4** `RacePredictionsController` with `PUT me` and `GET me`, `SubmitPredictionRequest`, `PredictionResponse`
+- [x] **2.5** Season sync of the e2e tests moved to `test/support/season.ts`, used by `test/seasons.e2e-spec.ts`
+- [x] **2.6** Tests: unit `SubmitPredictionHandler`; e2e AC1 to AC6
+- [x] **2.7** `make test`, `make test-e2e` and `make lint` pass. Commit phase 2.
 
 ## Phase 3: A player's predictions
 
