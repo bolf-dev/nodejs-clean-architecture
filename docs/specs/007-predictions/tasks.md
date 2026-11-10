@@ -1,6 +1,6 @@
 # 007 Predictions: tasks
 
-- **Status:** Approved (2026-11-10), phase 6 added 2026-11-10.
+- **Status:** Done (2026-11-10), phase 6 added 2026-11-10.
 - **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
 
 Tasks are done in order. Every phase ends with green checks and a commit on the `007-predictions` branch, then stops for review.
@@ -62,10 +62,10 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 7: README
 
-- [ ] **7.1** README: the three endpoints, the `predictions` module, the prediction screens. Commit phase 7.
+- [x] **7.1** README: the three endpoints, the `predictions` module, the prediction screens. Commit phase 7.
 
 ## Finish
 
-- [ ] **F.1** Check off 007 in the roadmap, set spec, plan and tasks to done
+- [x] **F.1** Check off 007 in the roadmap, set spec, plan and tasks to done
 - [ ] **F.2** Code review of the branch by the `cto` subagent; fix the findings the project owner accepts
 - [ ] **F.3** After approval of the project owner: push the branch and open a pull request

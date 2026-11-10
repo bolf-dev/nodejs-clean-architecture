@@ -1,6 +1,6 @@
 # 007 Predictions: plan
 
-- **Status:** Approved (2026-11-10), phase 6 added 2026-11-10 for the amended spec (the top 3 of qualifying).
+- **Status:** Done (2026-11-10), phase 6 added 2026-11-10 for the amended spec (the top 3 of qualifying).
 - **Spec:** [spec.md](spec.md)
 
 | Phase | Result                                                       | Spec items              |

@@ -84,8 +84,8 @@ Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProv
 
 Spec: [specs/007-predictions](../specs/007-predictions/spec.md)
 
-- [ ] Spec, plan, tasks
-- [ ] Implementation
+- [x] Spec, plan, tasks
+- [x] Implementation
 
 Submitting predictions with the validation rules. Without a deadline yet: a prediction can be changed until the race result is imported.
 

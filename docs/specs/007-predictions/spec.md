@@ -1,6 +1,6 @@
 # 007 Predictions
 
-- **Status:** Approved (2026-11-10), amended 2026-11-10: the top 3 of qualifying instead of only the pole position, and the podium design.
+- **Status:** Done (2026-11-10), amended 2026-11-10: the top 3 of qualifying instead of only the pole position, and the podium design.
 - **Roadmap:** [007](../../product/roadmap.md#007-predictions)
 
 ## Why
