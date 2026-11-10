@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { PlayerQueries } from '../../application/ports/player-queries.port.js';
-import type { PlayerCredentials, PlayerReadModel } from '../../application/player.read-model.js';
+import type { PlayerCredentials, PlayerListItem, PlayerReadModel } from '../../application/player.read-model.js';
 
 /** A row as plain SQL returns it. MikroORM returns timestamps of raw queries as strings. */
 interface PlayerRow {
@@ -32,6 +32,12 @@ export class SqlPlayerQueries implements PlayerQueries {
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
     };
+  }
+
+  async listAll(): Promise<PlayerListItem[]> {
+    return this.em
+      .getConnection()
+      .execute<PlayerListItem[]>('select id, nickname from players order by lower(nickname), id');
   }
 
   async findCredentialsByEmail(email: string): Promise<PlayerCredentials | null> {

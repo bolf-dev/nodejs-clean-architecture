@@ -3,6 +3,7 @@ import { isLoggedIn } from '@/auth/session'
 import LoginView from '@/views/LoginView.vue'
 import MyProfileView from '@/views/MyProfileView.vue'
 import PlayerProfileView from '@/views/PlayerProfileView.vue'
+import PlayersView from '@/views/PlayersView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 
 declare module 'vue-router' {
@@ -18,6 +19,7 @@ const router = createRouter({
     { path: '/login', component: LoginView, meta: { public: true } },
     { path: '/register', component: RegisterView, meta: { public: true } },
     { path: '/', component: MyProfileView },
+    { path: '/players', component: PlayersView },
     { path: '/players/:playerId', component: PlayerProfileView, props: true },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],

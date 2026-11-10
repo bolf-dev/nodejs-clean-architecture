@@ -18,9 +18,11 @@ import { Public } from '../../../../shared/presentation/http/public.decorator.js
 import { ChangeNicknameCommand } from '../../application/commands/change-nickname/change-nickname.command.js';
 import { RegisterPlayerCommand } from '../../application/commands/register-player/register-player.command.js';
 import { GetPlayerQuery } from '../../application/queries/get-player/get-player.query.js';
+import { ListPlayersQuery } from '../../application/queries/list-players/list-players.query.js';
 import { ChangeNicknameRequest } from './change-nickname.request.js';
 import { MyPlayerResponse } from './my-player.response.js';
 import { PlayerResponse } from './player.response.js';
+import { PlayersListResponse } from './players-list.response.js';
 import { RegisterPlayerRequest } from './register-player.request.js';
 
 const playerIdPipe = new ParseUUIDPipe({
@@ -45,6 +47,11 @@ export class PlayersController {
     );
     response.location(`/v1/players/${id}`);
     return { id };
+  }
+
+  @Get()
+  async list(): Promise<PlayersListResponse> {
+    return PlayersListResponse.from(await this.queryBus.execute(new ListPlayersQuery()));
   }
 
   // Declared before ':playerId', so "me" is not taken for a player id

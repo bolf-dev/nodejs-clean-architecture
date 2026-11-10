@@ -35,6 +35,7 @@ The backend runs in watch mode and the frontend in the Vite dev server, so chang
 |---------|----------------------------|-------|-----------------------------------------------------|----------------------------------|
 | `POST`  | `/v1/players`              | no    | Register `{ "email", "nickname", "password" }`      | `201` `{ "id" }`, `Location` header |
 | `POST`  | `/v1/auth/login`           | no    | Log in `{ "email", "password" }`                    | `200` `{ "accessToken", "expiresAt" }` |
+| `GET`   | `/v1/players`              | yes   | All players, ordered by nickname                    | `200` `{ "players": [{ "id", "nickname" }] }` |
 | `GET`   | `/v1/players/me`           | yes   | The logged-in player, with the email                | `200` `{ "id", "email", "nickname", "createdAt", "updatedAt" }` |
 | `PATCH` | `/v1/players/me`           | yes   | Change my nickname `{ "nickname": … }`              | `204`                            |
 | `GET`   | `/v1/players/{playerId}`   | yes   | Another player's profile, without the email         | `200` `{ "id", "nickname", "createdAt", "updatedAt" }` |
@@ -76,7 +77,7 @@ The project is built with spec-driven development: every feature has a spec, a p
 
 ## Frontend
 
-A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`) and other players' profiles (`/players/{playerId}`).
+A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`), the list of all players (`/players`) and other players' profiles (`/players/{playerId}`).
 
 - **Dev server:** Vite in the `frontend` compose service on http://localhost:5173 with hot reload
 - **API:** calls go to `/v1/…` on the same origin; Vite forwards them to the backend, so no CORS setup is needed
