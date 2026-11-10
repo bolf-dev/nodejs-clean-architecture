@@ -7,9 +7,11 @@ import { syncSeason2026, withFakeF1Data } from './support/season.js';
 import { createTestApp } from './support/test-app.js';
 
 const UNKNOWN_RACE = '0199a1b2-7c3d-7e4f-8a5b-6c7d8e9f0a1b';
+const UNKNOWN_PLAYER = '0199a1b2-8d4e-7f50-9b6c-7d8e9f0a1b2c';
 
 describe('Predictions (e2e)', () => {
   let app: INestApplication<App>;
+  let myId: string;
   let authorization: string;
   let australiaId: string;
   let chinaId: string;
@@ -25,7 +27,7 @@ describe('Predictions (e2e)', () => {
   beforeAll(async () => {
     app = await createTestApp(withFakeF1Data);
     await clearDatabase(app);
-    ({ authorization } = await registerAndLogIn(app, 'JohnDoe'));
+    ({ id: myId, authorization } = await registerAndLogIn(app, 'JohnDoe'));
     await syncSeason2026(app);
     const [australia, china] = await query<{ id: string }>(app, 'select id from races order by round');
     australiaId = australia!.id;
@@ -99,6 +101,48 @@ describe('Predictions (e2e)', () => {
       const response = await getMine(australiaId).expect(404);
 
       expect(response.body).toEqual({ error: 'Prediction not found' });
+    });
+  });
+
+  describe('GET /v1/players/{playerId}/predictions', () => {
+    const listOf = (playerId: string, viewerAuthorization = authorization) =>
+      request(app.getHttpServer())
+        .get(`/v1/players/${playerId}/predictions?season=2026`)
+        .set('Authorization', viewerAuthorization);
+
+    it('AC7 returns my predictions ordered by round', async () => {
+      await submit(chinaId, { pole: 'NOR', p1: 'VER', p2: 'NOR', p3: 'LEC' }).expect(204);
+      await submit(australiaId, { pole: 'VER', p1: 'VER', p2: 'LEC', p3: 'NOR' }).expect(204);
+
+      const response = await listOf(myId).expect(200);
+
+      expect(response.body.predictions.map(({ round }: { round: number }) => round)).toEqual([1, 2]);
+      expect(response.body.predictions[1]).toEqual({
+        raceId: chinaId,
+        round: 2,
+        raceName: 'Chinese Grand Prix',
+        pole: 'NOR',
+        p1: 'VER',
+        p2: 'NOR',
+        p3: 'LEC',
+        submittedAt: expect.any(String),
+        updatedAt: expect.any(String),
+      });
+    });
+
+    it('AC8 returns no predictions of another player before races are finished', async () => {
+      await submit(chinaId, { pole: 'NOR', p1: 'VER', p2: 'NOR', p3: 'LEC' }).expect(204);
+      const other = await registerAndLogIn(app, 'JaneRoe');
+
+      const response = await listOf(myId, other.authorization).expect(200);
+
+      expect(response.body).toEqual({ predictions: [] });
+    });
+
+    it('AC8 returns 404 for an unknown player', async () => {
+      const response = await listOf(UNKNOWN_PLAYER).expect(404);
+
+      expect(response.body).toEqual({ error: `Player "${UNKNOWN_PLAYER}" not found` });
     });
   });
 });

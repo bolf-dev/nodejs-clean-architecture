@@ -6,11 +6,12 @@ export class InMemoryPredictionQueries implements PredictionQueries {
   readonly predictions: (PredictionReadModel & { playerId: string })[] = [];
 
   async findMine(playerId: string, raceId: string): Promise<PredictionReadModel | null> {
-    const found = this.predictions.find((prediction) => prediction.playerId === playerId && prediction.raceId === raceId);
-    if (found === undefined) {
-      return null;
-    }
-    const { playerId: _playerId, ...prediction } = found;
-    return prediction;
+    return (await this.listByPlayer(playerId, [raceId]))[0] ?? null;
+  }
+
+  async listByPlayer(playerId: string, raceIds: string[]): Promise<PredictionReadModel[]> {
+    return this.predictions
+      .filter((prediction) => prediction.playerId === playerId && raceIds.includes(prediction.raceId))
+      .map(({ playerId: _playerId, ...prediction }) => prediction);
   }
 }

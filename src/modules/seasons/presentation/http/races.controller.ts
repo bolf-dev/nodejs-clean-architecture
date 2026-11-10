@@ -1,10 +1,10 @@
 import { BadRequestException, Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
+import { SeasonRequest } from '../../../../shared/presentation/http/season.request.js';
 import { GetRaceQuery } from '../../application/queries/get-race/get-race.query.js';
 import { ListRacesQuery } from '../../application/queries/list-races/list-races.query.js';
 import { RaceResponse } from './race.response.js';
 import { RacesListResponse } from './races-list.response.js';
-import { SeasonRequest } from './season.request.js';
 
 const raceIdPipe = new ParseUUIDPipe({
   exceptionFactory: () => new BadRequestException('raceId must be a UUID'),

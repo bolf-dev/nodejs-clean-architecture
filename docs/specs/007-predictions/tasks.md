@@ -29,11 +29,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 3: A player's predictions
 
-- [ ] **3.1** `PlayerDirectory` port, `QueryBusPlayerDirectory`, `FakePlayerDirectory`; `RaceCatalog.listRaces`
-- [ ] **3.2** `PredictionQueries.listByPlayer`, `ListPlayerPredictionsQuery` and its handler
-- [ ] **3.3** `SeasonRequest` moved to `shared/presentation/http/`; `PlayerPredictionsController`, `PlayerPredictionsResponse`
-- [ ] **3.4** Tests: unit `ListPlayerPredictionsHandler`; e2e AC7, AC8
-- [ ] **3.5** `make test`, `make test-e2e` and `make lint` pass. Commit phase 3.
+- [x] **3.1** `PlayerDirectory` port, `QueryBusPlayerDirectory`, `FakePlayerDirectory`; `RaceCatalog.listRaces`
+- [x] **3.2** `PredictionQueries.listByPlayer`, `ListPlayerPredictionsQuery` and its handler
+- [x] **3.3** `SeasonRequest` moved to `shared/presentation/http/`; `PlayerPredictionsController`, `PlayerPredictionsResponse`
+- [x] **3.4** Tests: unit `ListPlayerPredictionsHandler`; e2e AC7, AC8
+- [x] **3.5** `make test`, `make test-e2e` and `make lint` pass. Commit phase 3.
 
 ## Phase 4: Frontend, prediction on the race
 

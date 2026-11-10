@@ -28,6 +28,19 @@ export class SqlPredictionQueries implements PredictionQueries {
       );
     return row === undefined ? null : toPrediction(row);
   }
+
+  async listByPlayer(playerId: string, raceIds: string[]): Promise<PredictionReadModel[]> {
+    if (raceIds.length === 0) {
+      return [];
+    }
+    const rows = await this.em
+      .getConnection()
+      .execute<PredictionRow[]>(
+        `select race_id, pole, p1, p2, p3, submitted_at, updated_at from predictions where player_id = ? and race_id in (${raceIds.map(() => '?').join(', ')})`,
+        [playerId, ...raceIds],
+      );
+    return rows.map(toPrediction);
+  }
 }
 
 function toPrediction(row: PredictionRow): PredictionReadModel {

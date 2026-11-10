@@ -6,6 +6,12 @@ export class RaceNotFound extends NotFoundError {
   }
 }
 
+export class PlayerNotFound extends NotFoundError {
+  constructor(playerId: string) {
+    super(`Player "${playerId}" not found`);
+  }
+}
+
 /** The player has no prediction for the race, or no race has the id. */
 export class PredictionNotFound extends NotFoundError {
   constructor() {
