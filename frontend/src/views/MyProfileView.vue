@@ -5,6 +5,7 @@ import { changeMyNickname } from '@/api/players'
 import { me, refreshCurrentPlayer } from '@/auth/session'
 import NicknameForm from '@/components/NicknameForm.vue'
 import PlayerCard from '@/components/PlayerCard.vue'
+import PredictionsList from '@/components/PredictionsList.vue'
 
 const STATUS_DURATION_MS = 4000
 
@@ -82,6 +83,9 @@ void load()
     <button v-else type="button" class="profile__change" @click="startEditing">
       Change nickname
     </button>
+
+    <h2 class="profile__subtitle">My predictions</h2>
+    <PredictionsList :player-id="me.id" empty-text="You have no predictions yet." />
   </div>
   <p v-else class="status">Loading…</p>
 </template>
@@ -98,6 +102,14 @@ void load()
 .profile {
   display: grid;
   gap: var(--space-4);
+}
+
+.profile__subtitle {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-black);
+  font-style: italic;
+  text-transform: uppercase;
 }
 
 .profile__status {

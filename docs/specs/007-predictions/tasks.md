@@ -44,9 +44,9 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 5: Frontend, predictions on the profiles
 
-- [ ] **5.1** `listPlayerPredictions` in `api/predictions.ts`, `PredictionsList`, sections on `MyProfileView` and `PlayerProfileView`
-- [ ] **5.2** Verify in the browser: AC10
-- [ ] **5.3** `make frontend-lint` passes. Commit phase 5.
+- [x] **5.1** `listPlayerPredictions` in `api/predictions.ts`, `PredictionsList`, sections on `MyProfileView` and `PlayerProfileView`
+- [x] **5.2** Verify in the browser: AC10
+- [x] **5.3** `make frontend-lint` passes. Commit phase 5.
 
 ## Phase 6: README
 

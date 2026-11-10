@@ -30,3 +30,22 @@ export async function getMyPrediction(raceId: string): Promise<Prediction | null
     throw error
   }
 }
+
+/** A prediction in the list of a player's predictions, with the race it is for. */
+export interface PlayerPrediction extends Prediction {
+  round: number
+  raceName: string
+}
+
+/** The predictions of a player in a season that I may see, ordered by round. */
+export async function listPlayerPredictions(
+  playerId: string,
+  season: number,
+): Promise<PlayerPrediction[]> {
+  return (
+    await request<{ predictions: PlayerPrediction[] }>(
+      'GET',
+      `/v1/players/${encodeURIComponent(playerId)}/predictions?season=${season}`,
+    )
+  ).predictions
+}
