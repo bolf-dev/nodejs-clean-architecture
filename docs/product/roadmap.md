@@ -82,6 +82,8 @@ Loading the calendar and drivers from the Jolpica F1 API through the `F1DataProv
 
 ## 007 Predictions
 
+Spec: [specs/007-predictions](../specs/007-predictions/spec.md)
+
 - [ ] Spec, plan, tasks
 - [ ] Implementation
 
