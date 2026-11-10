@@ -11,11 +11,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 
 ## Phase 1: `Prediction` aggregate and persistence
 
-- [ ] **1.1** Domain: `PredictionPicks`, `Prediction` (`submit`, `change`, `reconstitute`), `prediction.errors.ts`, `PredictionRepository` port
-- [ ] **1.2** Infrastructure: `PredictionRecord`, `PredictionMapper`, `MikroOrmPredictionRepository` (upsert on player and race), `InMemoryPredictionRepository`
-- [ ] **1.3** Migration of `predictions`, `PredictionsModule` registered in `AppModule`
-- [ ] **1.4** Tests: unit `PredictionPicks` (R2, R3), `Prediction` (`change` keeps `submittedAt`)
-- [ ] **1.5** `make test` and `make lint` pass. Commit phase 1.
+- [x] **1.1** Domain: `PredictionPicks`, `Prediction` (`submit`, `change`, `reconstitute`), `prediction.errors.ts`, `PredictionRepository` port
+- [x] **1.2** Infrastructure: `PredictionRecord`, `PredictionMapper`, `MikroOrmPredictionRepository` (upsert on player and race), `InMemoryPredictionRepository`
+- [x] **1.3** Migration of `predictions`, `PredictionsModule` registered in `AppModule`
+- [x] **1.4** Tests: unit `PredictionPicks` (R2, R3), `Prediction` (`change` keeps `submittedAt`)
+- [x] **1.5** `make test` and `make lint` pass. Commit phase 1.
 
 ## Phase 2: Submit and read my prediction
 

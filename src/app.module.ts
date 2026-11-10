@@ -7,6 +7,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { validateEnvironment, type Environment } from './config/environment.js';
 import { createMikroOrmConfig } from './database/mikro-orm.config.js';
 import { PlayersModule } from './modules/players/players.module.js';
+import { PredictionsModule } from './modules/predictions/predictions.module.js';
 import { SeasonsModule } from './modules/seasons/seasons.module.js';
 import { ErrorResponseFilter } from './shared/presentation/http/error-response.filter.js';
 import { RequestValidationPipe } from './shared/presentation/http/validation.pipe.js';
@@ -23,6 +24,7 @@ import { RequestValidationPipe } from './shared/presentation/http/validation.pip
     CqrsModule.forRoot(),
     PlayersModule,
     SeasonsModule,
+    PredictionsModule,
   ],
   providers: [
     { provide: APP_PIPE, useClass: RequestValidationPipe },
