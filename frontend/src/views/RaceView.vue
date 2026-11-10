@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ApiError, GENERIC_ERROR } from '@/api/client'
+import { getMyPrediction, submitMyPrediction, type Picks } from '@/api/predictions'
 import { getRace, listDrivers, type Driver, type Race } from '@/api/races'
-import DriverCard from '@/components/DriverCard.vue'
+import PredictionForm from '@/components/PredictionForm.vue'
 import { formatDate } from '@/utils/format-date'
 
 const props = defineProps<{ raceId: string }>()
@@ -12,11 +13,20 @@ const race = ref<Race | null>(null)
 const drivers = ref<Driver[]>([])
 const notFound = ref(false)
 const errorMessage = ref<string | null>(null)
+const myPrediction = ref<Picks | null>(null)
+const submitting = ref(false)
+const formError = ref<string | null>(null)
+const statusMessage = ref('')
 
 async function load(): Promise<void> {
   try {
     race.value = await getRace(props.raceId)
-    drivers.value = await listDrivers(race.value.season)
+    const [seasonDrivers, prediction] = await Promise.all([
+      listDrivers(race.value.season),
+      getMyPrediction(props.raceId),
+    ])
+    drivers.value = seasonDrivers
+    myPrediction.value = prediction
   } catch (error) {
     if (error instanceof ApiError && (error.status === 404 || error.status === 400)) {
       notFound.value = true
@@ -25,6 +35,20 @@ async function load(): Promise<void> {
     }
   } finally {
     loading.value = false
+  }
+}
+
+async function onSubmit(picks: Picks): Promise<void> {
+  submitting.value = true
+  formError.value = null
+  statusMessage.value = ''
+  try {
+    await submitMyPrediction(props.raceId, picks)
+    statusMessage.value = 'Prediction saved'
+  } catch (error) {
+    formError.value = error instanceof ApiError ? error.message : GENERIC_ERROR
+  } finally {
+    submitting.value = false
   }
 }
 
@@ -69,13 +93,18 @@ void load()
       </div>
     </dl>
 
-    <h2 class="race__subtitle">Drivers</h2>
+    <h2 class="race__subtitle">Your prediction</h2>
     <p v-if="drivers.length === 0" class="race__status">The season has no drivers yet.</p>
-    <ul v-else class="race__grid">
-      <li v-for="driver in drivers" :key="driver.id">
-        <DriverCard :driver="driver" />
-      </li>
-    </ul>
+    <PredictionForm
+      v-else
+      :drivers="drivers"
+      :initial="myPrediction"
+      :submitting="submitting"
+      :error="formError"
+      @submit="onSubmit"
+    />
+    <!-- Always rendered, so screen readers announce the message when it appears -->
+    <p class="race__saved" role="status">{{ statusMessage }}</p>
   </section>
 </template>
 
@@ -143,12 +172,7 @@ void load()
   text-transform: uppercase;
 }
 
-.race__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--space-3);
-  width: 100%;
-  padding: 0;
-  list-style: none;
+.race__saved {
+  font-weight: var(--font-weight-semibold);
 }
 </style>

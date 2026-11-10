@@ -1,6 +1,7 @@
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig, type Options } from '@mikro-orm/postgresql';
 import { PlayerRecord } from '../modules/players/infrastructure/persistence/player.record.js';
+import { PredictionRecord } from '../modules/predictions/infrastructure/persistence/prediction.record.js';
 import { RaceRecord } from '../modules/seasons/infrastructure/persistence/race.record.js';
 import { SeasonDriverRecord } from '../modules/seasons/infrastructure/persistence/season-driver.record.js';
 
@@ -10,7 +11,7 @@ import { SeasonDriverRecord } from '../modules/seasons/infrastructure/persistenc
 export function createMikroOrmConfig(databaseUrl: string): Options {
   return defineConfig({
     clientUrl: databaseUrl,
-    entities: [PlayerRecord, RaceRecord, SeasonDriverRecord],
+    entities: [PlayerRecord, RaceRecord, SeasonDriverRecord, PredictionRecord],
     extensions: [Migrator],
     migrations: {
       path: 'dist/database/migrations',

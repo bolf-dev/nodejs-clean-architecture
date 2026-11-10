@@ -2,7 +2,8 @@
 import type { Driver } from '@/api/races'
 import { teamColor } from '@/utils/team-colors'
 
-defineProps<{ driver: Driver }>()
+// The badge shows the prediction steps of the driver, e.g. "Pole · Race P2"
+defineProps<{ driver: Driver; badge?: string }>()
 </script>
 
 <template>
@@ -12,6 +13,7 @@ defineProps<{ driver: Driver }>()
     <p class="driver-card__name">
       {{ driver.firstName }} <strong>{{ driver.lastName }}</strong>
     </p>
+    <span v-if="badge" class="driver-card__badge">{{ badge }}</span>
   </article>
 </template>
 
@@ -56,5 +58,15 @@ defineProps<{ driver: Driver }>()
 
 .driver-card__name strong {
   font-weight: var(--font-weight-bold);
+}
+
+.driver-card__badge {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0 var(--space-2);
+  background-color: var(--color-accent);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
 }
 </style>

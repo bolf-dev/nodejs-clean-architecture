@@ -43,10 +43,13 @@ The backend runs in watch mode and the frontend in the Vite dev server, so chang
 | `GET`   | `/v1/races?season=2026`    | yes   | The calendar of a season, ordered by round          | `200` `{ "races": [{ "id", "season", "round", "name", "circuit", "locality", "country", "sprintQualifyingAt", "qualifyingAt", "raceAt" }] }` |
 | `GET`   | `/v1/races/{raceId}`       | yes   | One race                                            | `200` race as in the calendar    |
 | `GET`   | `/v1/drivers?season=2026`  | yes   | The current grid of a season, ordered by code       | `200` `{ "drivers": [{ "id", "code", "number", "firstName", "lastName", "team" }] }` |
+| `PUT`   | `/v1/races/{raceId}/predictions/me` | yes | Submit or replace my prediction `{ "qualifying": { "p1", "p2", "p3" }, "race": { "p1", "p2", "p3" } }` with driver codes | `204` |
+| `GET`   | `/v1/races/{raceId}/predictions/me` | yes | My prediction for the race                  | `200` `{ "raceId", "qualifying", "race", "submittedAt", "updatedAt" }` |
+| `GET`   | `/v1/players/{playerId}/predictions?season=2026` | yes | A player's predictions, ordered by round; another player's only for finished races | `200` `{ "predictions": [{ "raceId", "round", "raceName", "qualifying", "race", … }] }` |
 
 Endpoints with a token need the header `Authorization: Bearer <accessToken>`.
 
-Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` missing or invalid token or wrong login, `404` unknown player or race, `409` email or nickname taken, `500` unexpected error. The full contracts are in the specs of [002](docs/specs/002-players/spec.md#api-contract), [004](docs/specs/004-authentication/spec.md#api-contract) and [006](docs/specs/006-season-sync/spec.md#api-contract).
+Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` missing or invalid token or wrong login, `404` unknown player, race or prediction, `409` email or nickname taken, `500` unexpected error. The full contracts are in the specs of [002](docs/specs/002-players/spec.md#api-contract), [004](docs/specs/004-authentication/spec.md#api-contract), [006](docs/specs/006-season-sync/spec.md#api-contract) and [007](docs/specs/007-predictions/spec.md#api-contract).
 
 ## Authentication
 
@@ -62,6 +65,12 @@ Errors have the body `{ "error": "<message>" }`: `400` invalid input, `401` miss
 - The data comes through the `F1DataProvider` port, implemented by `JolpicaF1DataProvider` for the public [Jolpica F1 API](https://api.jolpi.ca/ergast/f1/) with the built-in `fetch`. Everything is fetched before anything changes and saved in one transaction, so an unreachable API or an unreadable response changes nothing.
 - The current grid is the starters of the latest race with results, with their teams; before the first race, the season's drivers with a code and a number.
 
+## Predictions
+
+- A prediction is the top 3 of qualifying (P1 is the pole position) and the podium of the race, given as driver codes of the race's season. Each podium has three different drivers; a driver may be on both.
+- Submitting again replaces the prediction. Until the deadline (roadmap 010) every race can be predicted and a prediction can be changed at any time.
+- A player sees their own predictions; the predictions of other players are shown only for finished races, which come with the results (roadmap 008).
+
 ## Architecture
 
 The code follows the rules in the [constitution](docs/constitution.md). Each bounded context is a NestJS module in `src/modules/<context>/` with four layers, code shared by all modules lives in `src/shared/`.
@@ -73,7 +82,7 @@ The code follows the rules in the [constitution](docs/constitution.md). Each bou
 | `infrastructure` | Adapters of the ports: MikroORM repository, SQL queries, in-memory    | `application`, `domain`, any library        |
 | `presentation`   | HTTP controllers, request and response DTOs                           | `application`, NestJS                       |
 
-The modules are `players` (registration, login, profiles) and `seasons` (races and drivers synced from the Jolpica F1 API). They do not import each other.
+The modules are `players` (registration, login, profiles), `seasons` (races and drivers synced from the Jolpica F1 API) and `predictions`. A module uses another one only through its public commands and queries, never its tables or classes: `predictions` reads races, drivers and players through its own ports `RaceCatalog` and `PlayerDirectory`, whose adapters execute the queries of `seasons` and `players` on the `QueryBus`.
 
 Writes and reads take different paths (CQRS, as in the [NestJS CQRS recipe](https://docs.nestjs.com/recipes/cqrs)):
 
@@ -90,7 +99,7 @@ The project is built with spec-driven development: every feature has a spec, a p
 
 ## Frontend
 
-A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`), the list of all players (`/players`), other players' profiles (`/players/{playerId}`), the calendar of the current season (`/races`) and the race detail with driver cards in team colors (`/races/{raceId}`).
+A Vue 3 + TypeScript single page app in `frontend/`, styled like Formula 1 TV graphics: login (`/login`), registration (`/register`), my profile with changing the nickname (`/`), the list of all players (`/players`), other players' profiles (`/players/{playerId}`), the calendar of the current season (`/races`), the race detail with my prediction on a qualifying and a race podium, filled from driver cards in team colors (`/races/{raceId}`), and the predictions on the profiles.
 
 - **Dev server:** Vite in the `frontend` compose service on http://localhost:5173 with hot reload
 - **API:** calls go to `/v1/…` on the same origin; Vite forwards them to the backend, so no CORS setup is needed

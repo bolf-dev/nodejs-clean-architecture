@@ -1,75 +1,22 @@
-import { MikroORM, RequestContext } from '@mikro-orm/postgresql';
 import type { INestApplication } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
-import { SyncSeasonCommand } from '../src/modules/seasons/application/commands/sync-season/sync-season.command.js';
-import { F1DataProvider } from '../src/modules/seasons/application/ports/f1-data-provider.port.js';
-import type { RaceData } from '../src/modules/seasons/domain/race.entity.js';
-import { FakeF1DataProvider } from '../src/modules/seasons/infrastructure/in-memory/fake-f1-data-provider.js';
 import { clearDatabase } from './support/database.js';
 import { registerAndLogIn } from './support/registration.js';
+import { syncSeason2026, withFakeF1Data } from './support/season.js';
 import { createTestApp } from './support/test-app.js';
-
-const australia: RaceData = {
-  round: 1,
-  name: 'Australian Grand Prix',
-  circuit: 'Albert Park Grand Prix Circuit',
-  locality: 'Melbourne',
-  country: 'Australia',
-  sprintQualifyingAt: null,
-  qualifyingAt: new Date('2026-03-07T05:00:00Z'),
-  raceAt: new Date('2026-03-08T04:00:00Z'),
-};
-
-const china: RaceData = {
-  round: 2,
-  name: 'Chinese Grand Prix',
-  circuit: 'Shanghai International Circuit',
-  locality: 'Shanghai',
-  country: 'China',
-  sprintQualifyingAt: new Date('2026-03-13T07:30:00Z'),
-  qualifyingAt: new Date('2026-03-14T07:00:00Z'),
-  raceAt: new Date('2026-03-15T07:00:00Z'),
-};
 
 describe('Seasons (e2e)', () => {
   let app: INestApplication<App>;
   let authorization: string;
-  const provider = new FakeF1DataProvider();
 
   const get = (path: string) => request(app.getHttpServer()).get(path).set('Authorization', authorization);
 
   beforeAll(async () => {
-    // No test calls the real Jolpica F1 API (constitution 8)
-    app = await createTestApp((builder) => builder.overrideProvider(F1DataProvider).useValue(provider));
+    app = await createTestApp(withFakeF1Data);
     await clearDatabase(app);
     ({ authorization } = await registerAndLogIn(app, 'JohnDoe'));
-
-    // Out of order on purpose, the API orders them
-    provider.races = [china, australia];
-    provider.starters = [
-      {
-        externalId: 'verstappen',
-        code: 'VER',
-        number: 3,
-        firstName: 'Max',
-        lastName: 'Verstappen',
-        team: { id: 'red_bull', name: 'Red Bull' },
-      },
-      {
-        externalId: 'norris',
-        code: 'NOR',
-        number: 1,
-        firstName: 'Lando',
-        lastName: 'Norris',
-        team: { id: 'mclaren', name: 'McLaren' },
-      },
-    ];
-    // Outside an HTTP request MikroORM needs its own context, as in the command line
-    await RequestContext.create(app.get(MikroORM).em, () =>
-      app.get(CommandBus).execute(new SyncSeasonCommand(2026)),
-    );
+    await syncSeason2026(app);
   });
 
   afterAll(async () => {
@@ -136,25 +83,14 @@ describe('Seasons (e2e)', () => {
     it('AC9 returns the grid ordered by code, with teams', async () => {
       const response = await get('/v1/drivers?season=2026').expect(200);
 
-      expect(response.body).toEqual({
-        drivers: [
-          {
-            id: expect.any(String),
-            code: 'NOR',
-            number: 1,
-            firstName: 'Lando',
-            lastName: 'Norris',
-            team: { id: 'mclaren', name: 'McLaren' },
-          },
-          {
-            id: expect.any(String),
-            code: 'VER',
-            number: 3,
-            firstName: 'Max',
-            lastName: 'Verstappen',
-            team: { id: 'red_bull', name: 'Red Bull' },
-          },
-        ],
+      expect(response.body.drivers.map(({ code }: { code: string }) => code)).toEqual(['LEC', 'NOR', 'VER']);
+      expect(response.body.drivers[1]).toEqual({
+        id: expect.any(String),
+        code: 'NOR',
+        number: 1,
+        firstName: 'Lando',
+        lastName: 'Norris',
+        team: { id: 'mclaren', name: 'McLaren' },
       });
     });
   });
