@@ -1,11 +1,16 @@
 import { ApiError, request } from './client'
 
-/** The driver codes of a prediction, e.g. `{ pole: 'NOR', p1: 'VER', p2: 'NOR', p3: 'LEC' }`. */
-export interface Picks {
-  pole: string
+/** The top 3 driver codes of a session, e.g. `{ p1: 'VER', p2: 'NOR', p3: 'LEC' }`. */
+export interface Podium {
   p1: string
   p2: string
   p3: string
+}
+
+/** The drivers of a prediction: the top 3 of qualifying, whose P1 is the pole position, and the podium of the race. */
+export interface Picks {
+  qualifying: Podium
+  race: Podium
 }
 
 /** A prediction as returned by the API, times are ISO 8601 strings. */

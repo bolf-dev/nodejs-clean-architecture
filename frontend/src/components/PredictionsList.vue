@@ -41,10 +41,13 @@ void load()
         <span class="predictions__round">{{ prediction.round }}</span>
         <span class="predictions__race">{{ prediction.raceName }}</span>
         <span class="predictions__picks">
-          <span>Pole <strong>{{ prediction.pole }}</strong></span>
-          <span>P1 <strong>{{ prediction.p1 }}</strong></span>
-          <span>P2 <strong>{{ prediction.p2 }}</strong></span>
-          <span>P3 <strong>{{ prediction.p3 }}</strong></span>
+          <span>
+            Quali
+            <strong>{{ prediction.qualifying.p1 }} {{ prediction.qualifying.p2 }} {{ prediction.qualifying.p3 }}</strong>
+          </span>
+          <span>
+            Race <strong>{{ prediction.race.p1 }} {{ prediction.race.p2 }} {{ prediction.race.p3 }}</strong>
+          </span>
         </span>
       </RouterLink>
     </li>

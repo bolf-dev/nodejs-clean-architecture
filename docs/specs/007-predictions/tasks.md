@@ -56,9 +56,9 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 - [x] **6.4** Command, read models, `SubmitPredictionRequest` with nested podiums, responses; nested messages in `RequestValidationPipe`
 - [x] **6.5** Tests follow the new shape: unit `PredictionPicks` (R2 per podium), handlers; e2e AC1 to AC8
 - [x] **6.6** `make test`, `make test-e2e` and `make lint` pass. Commit the backend.
-- [ ] **6.7** Frontend: `api/predictions.ts`, `PredictionForm` with two podiums, `PredictionsList` rows
-- [ ] **6.8** Verify in the browser: AC9, AC10
-- [ ] **6.9** `make frontend-lint` passes. Commit the frontend.
+- [x] **6.7** Frontend: `api/predictions.ts`, `PredictionForm` with two podiums, `PredictionsList` rows
+- [x] **6.8** Verify in the browser: AC9, AC10
+- [x] **6.9** `make frontend-lint` passes. Commit the frontend.
 
 ## Phase 7: README
 

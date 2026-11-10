@@ -2,7 +2,7 @@
 import type { Driver } from '@/api/races'
 import { teamColor } from '@/utils/team-colors'
 
-// The badge shows the prediction slots of the driver, e.g. "POLE · P2"
+// The badge shows the prediction steps of the driver, e.g. "Pole · Race P2"
 defineProps<{ driver: Driver; badge?: string }>()
 </script>
 
