@@ -1,5 +1,5 @@
 import type { PlayerPredictionReadModel } from '../../application/prediction.read-model.js';
-import type { Podium } from '../../domain/prediction-picks.value-object.js';
+import type { PodiumResponse } from './prediction.response.js';
 
 /** A prediction in the body of GET /v1/players/{playerId}/predictions. Times are ISO 8601 strings in UTC. */
 interface PlayerPredictionItem {
@@ -7,8 +7,8 @@ interface PlayerPredictionItem {
   round: number;
   raceName: string;
   /** P1 is the pole position */
-  qualifying: Podium;
-  race: Podium;
+  qualifying: PodiumResponse;
+  race: PodiumResponse;
   submittedAt: string;
   updatedAt: string;
 }

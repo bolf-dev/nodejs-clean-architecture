@@ -87,7 +87,7 @@ Spec: [specs/007-predictions](../specs/007-predictions/spec.md)
 - [x] Spec, plan, tasks
 - [x] Implementation
 
-Submitting predictions with the validation rules. Without a deadline yet: a prediction can be changed until the race result is imported.
+Submitting predictions with the validation rules. Without a deadline yet: every race can be predicted and a prediction can be changed at any time.
 
 - `PUT /v1/races/{raceId}/predictions/me`: submit or replace the logged-in player's prediction `{ "qualifying": { "p1": "NOR", "p2": "VER", "p3": "LEC" }, "race": { "p1": "VER", "p2": "NOR", "p3": "LEC" } }`
 - `GET /v1/races/{raceId}/predictions/me`: the logged-in player's prediction

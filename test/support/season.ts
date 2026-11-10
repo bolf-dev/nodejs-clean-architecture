@@ -8,7 +8,7 @@ import type { RaceData } from '../../src/modules/seasons/domain/race.entity.js';
 import type { GridDriverData } from '../../src/modules/seasons/domain/season-driver.entity.js';
 import { FakeF1DataProvider } from '../../src/modules/seasons/infrastructure/in-memory/fake-f1-data-provider.js';
 
-export const AUSTRALIA: RaceData = {
+const AUSTRALIA: RaceData = {
   round: 1,
   name: 'Australian Grand Prix',
   circuit: 'Albert Park Grand Prix Circuit',
@@ -19,7 +19,7 @@ export const AUSTRALIA: RaceData = {
   raceAt: new Date('2026-03-08T04:00:00Z'),
 };
 
-export const CHINA: RaceData = {
+const CHINA: RaceData = {
   round: 2,
   name: 'Chinese Grand Prix',
   circuit: 'Shanghai International Circuit',
@@ -30,7 +30,7 @@ export const CHINA: RaceData = {
   raceAt: new Date('2026-03-15T07:00:00Z'),
 };
 
-export const STARTERS: GridDriverData[] = [
+const STARTERS: GridDriverData[] = [
   {
     externalId: 'verstappen',
     code: 'VER',
@@ -58,7 +58,7 @@ export const STARTERS: GridDriverData[] = [
 ];
 
 /** Replaces the Jolpica adapter with a fake, so no e2e test calls the real API (constitution 8). */
-export const fakeF1Data = new FakeF1DataProvider();
+const fakeF1Data = new FakeF1DataProvider();
 
 export const withFakeF1Data = (builder: TestingModuleBuilder): TestingModuleBuilder =>
   builder.overrideProvider(F1DataProvider).useValue(fakeF1Data);
