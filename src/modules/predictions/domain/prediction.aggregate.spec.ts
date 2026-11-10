@@ -10,10 +10,16 @@ describe('Prediction', () => {
       id: 'prediction-1',
       playerId: 'player-1',
       raceId: 'race-1',
-      picks: PredictionPicks.reconstitute({ pole: 'NOR', p1: 'VER', p2: 'NOR', p3: 'LEC' }),
+      picks: PredictionPicks.reconstitute({
+        qualifying: { p1: 'NOR', p2: 'VER', p3: 'LEC' },
+        race: { p1: 'VER', p2: 'NOR', p3: 'LEC' },
+      }),
       now: SUBMITTED_AT,
     });
-    const newPicks = PredictionPicks.reconstitute({ pole: 'VER', p1: 'NOR', p2: 'VER', p3: 'HAM' });
+    const newPicks = PredictionPicks.reconstitute({
+      qualifying: { p1: 'VER', p2: 'NOR', p3: 'HAM' },
+      race: { p1: 'NOR', p2: 'VER', p3: 'HAM' },
+    });
 
     prediction.change(newPicks, LATER);
 

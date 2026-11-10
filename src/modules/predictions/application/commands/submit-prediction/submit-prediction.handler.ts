@@ -20,9 +20,8 @@ export class SubmitPredictionHandler implements ICommandHandler<SubmitPrediction
       throw new RaceNotFound(command.raceId);
     }
 
-    const { pole, p1, p2, p3 } = command;
     const picks = PredictionPicks.create(
-      { pole, p1, p2, p3 },
+      { qualifying: command.qualifying, race: command.race },
       { season, driverCodes: await this.raceCatalog.driverCodes(season) },
     );
 

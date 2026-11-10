@@ -35,7 +35,7 @@ export class RacePredictionsController {
     @Body() request: SubmitPredictionRequest,
   ): Promise<void> {
     await this.commandBus.execute(
-      new SubmitPredictionCommand(playerId, raceId, request.pole, request.p1, request.p2, request.p3),
+      new SubmitPredictionCommand(playerId, raceId, request.qualifying, request.race),
     );
   }
 

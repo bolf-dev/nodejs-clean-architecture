@@ -51,11 +51,11 @@ Tasks are done in order. Every phase ends with green checks and a commit on the 
 ## Phase 6: The top 3 of qualifying and the podium design
 
 - [x] **6.1** Commit the amended spec, plan and tasks with the mission and roadmap changes
-- [ ] **6.2** Domain: `PredictionPicks` with `qualifying` and `race`, `PodiumDriversNotDifferent` per podium
-- [ ] **6.3** Migration replacing the pick columns, `PredictionRecord`, `PredictionMapper`, SQL queries
-- [ ] **6.4** Command, read models, `SubmitPredictionRequest` with nested podiums, responses; nested messages in `RequestValidationPipe`
-- [ ] **6.5** Tests follow the new shape: unit `PredictionPicks` (R2 per podium), handlers; e2e AC1 to AC8
-- [ ] **6.6** `make test`, `make test-e2e` and `make lint` pass. Commit the backend.
+- [x] **6.2** Domain: `PredictionPicks` with `qualifying` and `race`, `PodiumDriversNotDifferent` per podium
+- [x] **6.3** Migration replacing the pick columns, `PredictionRecord`, `PredictionMapper`, SQL queries
+- [x] **6.4** Command, read models, `SubmitPredictionRequest` with nested podiums, responses; nested messages in `RequestValidationPipe`
+- [x] **6.5** Tests follow the new shape: unit `PredictionPicks` (R2 per podium), handlers; e2e AC1 to AC8
+- [x] **6.6** `make test`, `make test-e2e` and `make lint` pass. Commit the backend.
 - [ ] **6.7** Frontend: `api/predictions.ts`, `PredictionForm` with two podiums, `PredictionsList` rows
 - [ ] **6.8** Verify in the browser: AC9, AC10
 - [ ] **6.9** `make frontend-lint` passes. Commit the frontend.

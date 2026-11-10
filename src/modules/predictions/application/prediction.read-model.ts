@@ -1,10 +1,10 @@
-/** A prediction as the read side returns it: flat data, no domain objects. */
+import type { Podium } from '../domain/prediction-picks.value-object.js';
+
+/** A prediction as the read side returns it: flat data, no domain objects. Qualifying P1 is the pole position. */
 export interface PredictionReadModel {
   raceId: string;
-  pole: string;
-  p1: string;
-  p2: string;
-  p3: string;
+  qualifying: Podium;
+  race: Podium;
   submittedAt: Date;
   updatedAt: Date;
 }

@@ -1,13 +1,8 @@
-import { IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsObject, IsString, ValidateNested } from 'class-validator';
 
-/**
- * Body of PUT /v1/races/{raceId}/predictions/me. Checks only the shape of the request,
- * the prediction rules (different podium drivers, drivers of the season) belong to the domain.
- */
-export class SubmitPredictionRequest {
-  @IsString()
-  pole: string;
-
+/** The top 3 driver codes of qualifying or of the race. */
+export class PodiumRequest {
   @IsString()
   p1: string;
 
@@ -16,4 +11,21 @@ export class SubmitPredictionRequest {
 
   @IsString()
   p3: string;
+}
+
+/**
+ * Body of PUT /v1/races/{raceId}/predictions/me. Checks only the shape of the request,
+ * the prediction rules (different drivers per podium, drivers of the season) belong to the domain.
+ */
+export class SubmitPredictionRequest {
+  /** P1 is the pole position */
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PodiumRequest)
+  qualifying: PodiumRequest;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PodiumRequest)
+  race: PodiumRequest;
 }

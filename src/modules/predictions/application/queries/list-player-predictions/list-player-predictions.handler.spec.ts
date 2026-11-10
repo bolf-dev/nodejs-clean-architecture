@@ -20,10 +20,8 @@ describe('ListPlayerPredictionsHandler', () => {
     queries.predictions.push({
       playerId: 'jane-roe',
       raceId: 'race-1',
-      pole: 'NOR',
-      p1: 'VER',
-      p2: 'NOR',
-      p3: 'LEC',
+      qualifying: { p1: 'NOR', p2: 'VER', p3: 'LEC' },
+      race: { p1: 'VER', p2: 'NOR', p3: 'LEC' },
       submittedAt: new Date('2026-11-10T09:00:00.000Z'),
       updatedAt: new Date('2026-11-10T09:00:00.000Z'),
     });
@@ -32,7 +30,7 @@ describe('ListPlayerPredictionsHandler', () => {
 
   it("returns the player's own predictions with their races (R7)", async () => {
     expect(await list('jane-roe', 'jane-roe')).toEqual([
-      expect.objectContaining({ raceId: 'race-1', round: 1, raceName: 'Australian Grand Prix', pole: 'NOR' }),
+      expect.objectContaining({ raceId: 'race-1', round: 1, raceName: 'Australian Grand Prix' }),
     ]);
   });
 
